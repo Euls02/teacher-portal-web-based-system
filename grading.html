@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teachers Portal - Grading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+:root {
+  --primary-green: #2e7d32;
+  --dark-green: #1b5e20;
+  --light-green: #4caf50;
+  --accent-green: #66bb6a;
+  --bg-light: #f5f9f7;
+  --text-dark: #1b3a1a;
+  --text-medium: #33691e;
+  --border-light: #a5d6a7;
+  --shadow: rgba(46, 125, 50, 0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Work Sans', sans-serif;
+  background: linear-gradient(135deg, #f5f9f7 0%, #e8f5e9 100%);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+  color: white;
+  padding: 1.2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+header h1 { font-family: 'Crimson Pro', serif; font-size: 1.8rem; font-weight: 700; letter-spacing: 0.5px; }
+header .logo { height: 55px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: transform 0.3s; }
+header .logo:hover { transform: scale(1.05); }
+
+nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.btn-nav {
+  background-color: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  backdrop-filter: blur(10px);
+}
+.btn-nav:hover { background-color: white; color: var(--primary-green); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.btn-nav.btn-active { background-color: white; color: var(--primary-green); }
+.btn-nav.btn-logout { border-color: rgba(244,67,54,0.8); background-color: rgba(244,67,54,0.1); cursor: pointer; }
+.btn-nav.btn-logout:hover { background-color: #f44336; color: white; border-color: #f44336; }
+
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px var(--shadow);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.container h2 {
+  font-family: 'Crimson Pro', serif;
+  color: var(--primary-green);
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 1rem;
+}
+.container h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 4px;
+  background: linear-gradient(90deg, transparent, var(--light-green), transparent);
+  border-radius: 2px;
+}
+
+form#add-student-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--bg-light);
+  border-radius: 16px;
+  box-shadow: 0 4px 15px var(--shadow);
+}
+
+form#add-student-form .form-group { display: flex; flex-direction: column; min-width: 150px; flex: 1 1 150px; }
+form#add-student-form label { font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-green); font-size: 0.95rem; }
+form#add-student-form label i { margin-right: 0.5rem; }
+
+form#add-student-form input[type="text"],
+form#add-student-form select,
+form#add-student-form input[type="number"] {
+  padding: 0.8rem 1rem;
+  border: 2px solid var(--border-light);
+  border-radius: 10px;
+  font-size: 1rem;
+  color: var(--text-dark);
+  font-family: 'Work Sans', sans-serif;
+  transition: all 0.3s ease;
+  background: white;
+}
+form#add-student-form input:focus,
+form#add-student-form select:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(46,125,50,0.1);
+  transform: translateY(-2px);
+}
+
+#add-student-btn {
+  background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+  color: white; border: none; border-radius: 10px;
+  padding: 0.9rem 1.5rem; font-weight: 600; font-size: 1rem;
+  cursor: pointer; flex-shrink: 0; align-self: flex-end;
+  box-shadow: 0 4px 15px rgba(46,125,50,0.3);
+  font-family: 'Work Sans', sans-serif; transition: all 0.3s ease;
+}
+#add-student-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,125,50,0.4); }
+#add-student-btn i { margin-right: 0.5rem; }
+
+/* ===== PASTE IMPORT SECTION ===== */
+.import-section {
+  background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+  border: 2px dashed var(--border-light);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.import-section::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--primary-green), var(--light-green), var(--accent-green));
+}
+.import-section:hover { border-color: var(--primary-green); box-shadow: 0 6px 20px var(--shadow); }
+
+.import-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem;
+}
+.import-header h3 {
+  font-family: 'Crimson Pro', serif;
+  color: var(--primary-green); font-size: 1.4rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.import-badge {
+  background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+  color: white; font-size: 0.75rem; font-weight: 700;
+  padding: 0.25rem 0.7rem; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.import-instructions {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+  border-left: 4px solid var(--light-green);
+}
+.import-instructions p { margin-bottom: 0.4rem; }
+.import-instructions code {
+  background: #e8f5e9;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+  color: var(--primary-green);
+  font-size: 0.88rem;
+}
+
+.import-controls {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  margin-bottom: 1rem; align-items: flex-end;
+}
+
+.import-controls .form-group {
+  display: flex; flex-direction: column; min-width: 160px; flex: 1 1 160px;
+}
+.import-controls label {
+  font-weight: 600; margin-bottom: 0.4rem;
+  color: var(--primary-green); font-size: 0.9rem;
+}
+.import-controls select, .import-controls input {
+  padding: 0.7rem 1rem;
+  border: 2px solid var(--border-light);
+  border-radius: 10px; font-size: 0.95rem;
+  color: var(--text-dark); background: white;
+  font-family: 'Work Sans', sans-serif;
+  transition: all 0.3s;
+}
+.import-controls select:focus, .import-controls input:focus {
+  outline: none; border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+}
+
+.paste-area-wrapper { position: relative; margin-bottom: 1rem; }
+.paste-area-label {
+  font-weight: 600; color: var(--primary-green);
+  margin-bottom: 0.5rem; font-size: 0.95rem;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+
+#paste-area {
+  width: 100%;
+  min-height: 130px;
+  padding: 1rem;
+  border: 2px dashed var(--border-light);
+  border-radius: 12px;
+  font-family: monospace; font-size: 0.9rem;
+  color: var(--text-dark); background: white;
+  resize: vertical; transition: all 0.3s ease;
+  line-height: 1.6;
+}
+#paste-area:focus {
+  outline: none; border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(46,125,50,0.1);
+  border-style: solid;
+}
+#paste-area::placeholder { color: #aaa; font-style: italic; }
+
+.paste-placeholder-hint {
+  text-align: center; color: #bbb; font-size: 0.85rem;
+  margin-top: 0.3rem; pointer-events: none;
+}
+
+.import-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+.btn-import {
+  background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+  color: white; border: none; padding: 0.85rem 1.5rem;
+  border-radius: 10px; font-weight: 600; font-size: 0.95rem;
+  cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'Work Sans', sans-serif; transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(46,125,50,0.3);
+}
+.btn-import:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(46,125,50,0.4); }
+
+.btn-clear-paste {
+  background: white; color: #888;
+  border: 2px solid #ddd; padding: 0.8rem 1.2rem;
+  border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+  cursor: pointer; display: flex; align-items: center; gap: 0.4rem;
+  font-family: 'Work Sans', sans-serif; transition: all 0.3s ease;
+}
+.btn-clear-paste:hover { border-color: #f44336; color: #f44336; background: #fff5f5; }
+
+.btn-copy-template {
+  background: white; color: var(--primary-green);
+  border: 2px solid var(--border-light);
+  padding: 0.8rem 1.2rem; border-radius: 10px;
+  font-weight: 600; font-size: 0.9rem; cursor: pointer;
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: 'Work Sans', sans-serif; transition: all 0.3s ease;
+}
+.btn-copy-template:hover { border-color: var(--primary-green); background: var(--bg-light); }
+
+/* Preview panel */
+.import-preview {
+  background: white; border: 2px solid var(--border-light);
+  border-radius: 12px; padding: 1.2rem;
+  margin-top: 1rem; display: none;
+}
+.import-preview.show { display: block; animation: fadeInUp 0.3s ease; }
+.import-preview h4 {
+  color: var(--primary-green); font-size: 1rem; font-weight: 700;
+  margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem;
+}
+.preview-stats {
+  display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;
+}
+.preview-stat {
+  background: var(--bg-light); padding: 0.5rem 1rem; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 600; color: var(--primary-green);
+}
+.preview-stat span { color: var(--dark-green); }
+.preview-errors {
+  background: #fff8f8; border: 1px solid #ffcdd2; border-radius: 8px;
+  padding: 0.8rem 1rem; margin-bottom: 0.8rem;
+  font-size: 0.85rem; color: #c62828;
+}
+.preview-errors ul { margin-left: 1.2rem; margin-top: 0.3rem; }
+.preview-rows-table {
+  width: 100%; border-collapse: collapse; font-size: 0.85rem;
+  max-height: 200px; overflow-y: auto; display: block;
+}
+.preview-rows-table thead { background: var(--bg-light); position: sticky; top: 0; }
+.preview-rows-table th, .preview-rows-table td {
+  padding: 0.5rem 0.75rem; text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+.preview-rows-table th { font-weight: 700; color: var(--primary-green); }
+.preview-rows-table tr.row-error { background: #fff8f8; color: #c62828; }
+.preview-rows-table tr.row-ok:nth-child(even) { background: #fafffe; }
+
+/* Toast notification */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem;
+  background: var(--dark-green); color: white;
+  padding: 1rem 1.5rem; border-radius: 12px;
+  font-weight: 600; font-size: 0.95rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  z-index: 9999; display: flex; align-items: center; gap: 0.6rem;
+  opacity: 0; transform: translateY(20px);
+  transition: all 0.4s ease;
+  max-width: 350px;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.error { background: #c62828; }
+.toast.warning { background: #e65100; }
+
+/* Table Styles */
+.table-wrapper { overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+.grade-table { width: 100%; border-collapse: collapse; background-color: white; }
+.grade-table thead { background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; }
+.grade-table thead th { text-align: center; padding: 1rem; font-weight: 700; letter-spacing: 0.5px; }
+.grade-table tbody tr { transition: all 0.3s ease; border-bottom: 1px solid #e0e0e0; }
+.grade-table tbody tr:hover { background-color: var(--bg-light); transform: translateX(3px); }
+.grade-table tbody td { text-align: center; padding: 1rem; color: var(--text-dark); font-weight: 500; }
+.grade-table tbody td.actions-cell { padding: 0.75rem; }
+
+.group-heading-row { background: linear-gradient(135deg, rgba(46,125,50,0.1), rgba(56,142,60,0.1)) !important; position: relative; }
+.group-heading-row td { font-weight: 700 !important; font-size: 1.1rem; padding: 1.2rem !important; color: var(--primary-green) !important; }
+.group-title { display: inline-flex; align-items: center; gap: 0.5rem; }
+.group-title i { font-size: 1.2rem; }
+
+.download-btn {
+  position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+  background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+  color: white; border: none; border-radius: 10px;
+  padding: 0.6rem 1.2rem; cursor: pointer; font-size: 0.9rem; font-weight: 600;
+  transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(46,125,50,0.3);
+  font-family: 'Work Sans', sans-serif;
+}
+.download-btn:hover { transform: translateY(-50%) translateY(-2px); box-shadow: 0 6px 15px rgba(46,125,50,0.4); }
+.download-btn i { margin-right: 0.5rem; }
+
+.action-buttons { display: inline-flex; gap: 0.5rem; }
+.action-buttons button {
+  border: none; padding: 0.6rem 1rem; cursor: pointer;
+  font-weight: 600; color: white; font-size: 0.85rem; border-radius: 8px;
+  transition: all 0.3s ease; display: flex; align-items: center; gap: 0.4rem;
+  font-family: 'Work Sans', sans-serif;
+}
+.action-buttons button.btn-remove { background: linear-gradient(135deg, #f44336, #e57373); }
+.action-buttons button.btn-remove:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(244,67,54,0.4); }
+.action-buttons button.btn-edit { background: linear-gradient(135deg, var(--light-green), var(--accent-green)); }
+.action-buttons button.btn-edit:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(76,175,80,0.4); }
+
+.print-all-section {
+  background: var(--bg-light); padding: 2rem; border-radius: 16px;
+  margin-bottom: 1.5rem; box-shadow: 0 4px 15px var(--shadow); text-align: center;
+}
+#print-all-grades-btn {
+  background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+  width: 100%; max-width: 500px; padding: 1rem 2rem; font-size: 1.1rem;
+  border-radius: 10px; border: none; color: white; font-weight: 600;
+  cursor: pointer; display: inline-block; transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(46,125,50,0.3); font-family: 'Work Sans', sans-serif;
+}
+#print-all-grades-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,125,50,0.4); }
+#print-all-grades-btn i { margin-right: 0.6rem; font-size: 1.2rem; }
+
+/* Toggle import section */
+.section-toggle-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--primary-green); font-size: 1.1rem;
+  display: flex; align-items: center; gap: 0.4rem;
+  font-weight: 600; font-family: 'Work Sans', sans-serif;
+  padding: 0.3rem 0.6rem; border-radius: 6px;
+  transition: all 0.2s;
+}
+.section-toggle-btn:hover { background: rgba(46,125,50,0.08); }
+
+@media (max-width: 768px) {
+  header { flex-direction: column; gap: 1rem; }
+  nav { width: 100%; justify-content: center; }
+  .btn-nav { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
+  .container { padding: 1.5rem; margin: 1rem; }
+  .download-btn { position: static; transform: none; margin-top: 0.5rem; display: block; width: 100%; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1><i class="fas fa-graduation-cap"></i> Teachers Portal - Grading</h1>
+  <nav>
+    <a href="home.html" class="btn-nav"><i class="fas fa-home"></i> Home</a>
+    <a href="events.html" class="btn-nav"><i class="fas fa-calendar-alt"></i> Events</a>
+    <a href="schedule.html" class="btn-nav"><i class="fas fa-clock"></i> Schedule</a>
+    <a href="grading.html" class="btn-nav btn-active"><i class="fas fa-graduation-cap"></i> Grading</a>
+    <a href="attendance.html" class="btn-nav"><i class="fas fa-user-check"></i> Attendance</a>
+    <a href="announcements.html" class="btn-nav"><i class="fas fa-bullhorn"></i> Announcements</a>
+    <a href="reports.html" class="btn-nav"><i class="fas fa-chart-bar"></i> Reports</a>
+    <a href="lessonplan.html" class="btn-nav"><i class="fas fa-book-open"></i> Lesson Plan</a>
+    <button onclick="logout()" class="btn-nav btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </nav>
+  <img src="2c41ee4a-1282-462a-ba5d-019375e704b4.jpg" alt="College Logo" class="logo" />
+</header>
+
+<section id="grading-section" class="container">
+  <h2><i class="fas fa-clipboard-list"></i> Submit Grades</h2>
+
+  <!-- ===== PASTE/IMPORT SECTION ===== -->
+  <div class="import-section" id="import-section">
+    <div class="import-header">
+      <h3>
+        <i class="fas fa-paste"></i> Import from Worksheet
+        <span class="import-badge">New</span>
+      </h3>
+      <button class="section-toggle-btn" id="toggle-import-btn" onclick="toggleImport()">
+        <i class="fas fa-chevron-up" id="toggle-icon"></i> Hide
+      </button>
+    </div>
+
+    <div id="import-body">
+      <div class="import-instructions">
+        <p><strong><i class="fas fa-info-circle"></i> How to use:</strong> Copy your student list from Excel, Google Sheets, or any spreadsheet and paste it below.</p>
+        <p>Each row should be: <code>Student Name</code> &nbsp;<code>Tab or Comma</code>&nbsp; <code>Grade</code></p>
+        <p>Example: &nbsp;<code>Juan dela Cruz&nbsp;&nbsp;&nbsp;88</code> &nbsp;or&nbsp; <code>Juan dela Cruz, 88</code></p>
+        <p>You can also include an optional 3rd column for grading period: <code>Juan dela Cruz, 88, First Semester</code></p>
+      </div>
+
+      <div class="import-controls">
+        <div class="form-group">
+          <label><i class="fas fa-user-graduate"></i> Student Type</label>
+          <select id="import-student-type">
+            <option value="college">College</option>
+            <option value="elementary">Elementary</option>
+          </select>
+        </div>
+        <div class="form-group" id="import-course-group">
+          <label><i class="fas fa-book"></i> Course</label>
+          <select id="import-course">
+            <option value="BSCS">BSCS</option>
+            <option value="EDUC">EDUC</option>
+            <option value="BSBA">BSBA</option>
+            <option value="Midwifery">Midwifery</option>
+          </select>
+        </div>
+        <div class="form-group" id="import-section-group" style="display:none;">
+          <label><i class="fas fa-users"></i> Section</label>
+          <input type="text" id="import-section-input" placeholder="e.g. Section A" />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-calendar"></i> Default Grading Period</label>
+          <select id="import-grading-period">
+            <option value="first-sem">First Semester</option>
+            <option value="second-sem">Second Semester</option>
+            <option value="first-second-sem">First &amp; Second Semester</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="paste-area-wrapper">
+        <div class="paste-area-label">
+          <i class="fas fa-clipboard"></i> Paste Your Student Data Here
+        </div>
+        <textarea id="paste-area" placeholder="Paste from Excel or Google Sheets here...&#10;&#10;Example:&#10;Juan dela Cruz    88&#10;Maria Santos      92&#10;Pedro Reyes       75"></textarea>
+      </div>
+
+      <div class="import-actions">
+        <button class="btn-import" onclick="previewImport()">
+          <i class="fas fa-search"></i> Preview Import
+        </button>
+        <button class="btn-import" onclick="confirmImport()" id="confirm-import-btn" style="display:none; background: linear-gradient(135deg, #1b5e20, #2e7d32);">
+          <i class="fas fa-check-circle"></i> Confirm &amp; Import All
+        </button>
+        <button class="btn-copy-template" onclick="copyTemplate()">
+          <i class="fas fa-copy"></i> Copy Template
+        </button>
+        <button class="btn-clear-paste" onclick="clearPaste()">
+          <i class="fas fa-times"></i> Clear
+        </button>
+      </div>
+
+      <div class="import-preview" id="import-preview"></div>
+    </div>
+  </div>
+
+  <!-- Add Student Form -->
+  <form id="add-student-form">
+    <div class="form-group">
+      <label for="student-name"><i class="fas fa-user"></i> Student Name</label>
+      <input type="text" id="student-name" placeholder="Enter student name" required />
+    </div>
+    <div class="form-group">
+      <label for="student-type"><i class="fas fa-user-graduate"></i> Student Type</label>
+      <select id="student-type" required>
+        <option value="" disabled selected>Select type</option>
+        <option value="college">College</option>
+        <option value="elementary">Elementary</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="grading-period"><i class="fas fa-calendar"></i> Grading Period</label>
+      <select id="grading-period" required>
+        <option value="" disabled selected>Select period</option>
+        <option value="first-sem">First Semester</option>
+        <option value="second-sem">Second Semester</option>
+        <option value="first-second-sem">First &amp; Second Semester</option>
+        <option value="midterm">Midterm</option>
+        <option value="finals">Finals</option>
+      </select>
+    </div>
+    <div class="form-group" id="details-group">
+      <label for="details" id="details-label"><i class="fas fa-info-circle"></i> Details</label>
+      <input type="text" id="details" placeholder="Course, etc." />
+    </div>
+    <div class="form-group">
+      <label for="grade"><i class="fas fa-star"></i> Grade</label>
+      <input type="number" id="grade" placeholder="Enter grade" min="0" max="100" required />
+    </div>
+    <button type="submit" id="add-student-btn">
+      <i class="fas fa-plus-circle"></i> Add Student
+    </button>
+  </form>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <table id="grade-list" class="grade-table">
+      <thead>
+        <tr>
+          <th><i class="fas fa-user"></i> Student</th>
+          <th><i class="fas fa-user-graduate"></i> Student Type</th>
+          <th><i class="fas fa-calendar"></i> Grading Period</th>
+          <th><i class="fas fa-info-circle"></i> Details</th>
+          <th><i class="fas fa-star"></i> Grade</th>
+          <th><i class="fas fa-cog"></i> Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Print All Section -->
+  <div class="print-all-section">
+    <button id="print-all-grades-btn">
+      <i class="fas fa-print"></i> Print All Grades
+    </button>
+  </div>
+</section>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ UTILS ============
+function showToast(msg, type = 'success') {
+  var t = document.getElementById('toast');
+  t.className = 'toast ' + type;
+  t.innerHTML = (type === 'success' ? '<i class="fas fa-check-circle"></i>' : type === 'error' ? '<i class="fas fa-times-circle"></i>' : '<i class="fas fa-exclamation-triangle"></i>') + ' ' + msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    localStorage.removeItem('currentUser');
+    location.href = 'index.html';
+  }
+}
+
+if (!localStorage.getItem('currentUser')) window.location.href = 'index.html';
+
+// ============ IMPORT TOGGLE ============
+var importVisible = true;
+function toggleImport() {
+  importVisible = !importVisible;
+  document.getElementById('import-body').style.display = importVisible ? 'block' : 'none';
+  document.getElementById('toggle-icon').className = importVisible ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+  document.getElementById('toggle-import-btn').innerHTML = '<i class="fas fa-chevron-' + (importVisible ? 'up' : 'down') + '" id="toggle-icon"></i> ' + (importVisible ? 'Hide' : 'Show');
+}
+
+// ============ IMPORT - STUDENT TYPE TOGGLE ============
+document.getElementById('import-student-type').addEventListener('change', function() {
+  var isCollege = this.value === 'college';
+  document.getElementById('import-course-group').style.display = isCollege ? '' : 'none';
+  document.getElementById('import-section-group').style.display = isCollege ? 'none' : '';
+  var gp = document.getElementById('import-grading-period');
+  gp.innerHTML = '';
+  if (isCollege) {
+    [['first-sem','First Semester'],['second-sem','Second Semester'],['first-second-sem','First & Second Semester']].forEach(function(o) {
+      gp.innerHTML += '<option value="'+o[0]+'">'+o[1]+'</option>';
+    });
+  } else {
+    [['first-grading','First Grading'],['second-grading','Second Grading'],['third-grading','Third Grading'],['fourth-grading','Fourth Grading']].forEach(function(o) {
+      gp.innerHTML += '<option value="'+o[0]+'">'+o[1]+'</option>';
+    });
+  }
+});
+
+// ============ COPY TEMPLATE ============
+function copyTemplate() {
+  var template = 'Student Name\tGrade\nJuan dela Cruz\t88\nMaria Santos\t92\nPedro Reyes\t75\nAna Gomez\t85';
+  navigator.clipboard.writeText(template).then(function() {
+    showToast('Template copied! Paste it into Excel or Google Sheets to use as a guide.');
+  }).catch(function() {
+    showToast('Copy failed — please copy manually.', 'error');
+  });
+}
+
+function clearPaste() {
+  document.getElementById('paste-area').value = '';
+  document.getElementById('import-preview').className = 'import-preview';
+  document.getElementById('confirm-import-btn').style.display = 'none';
+  window._parsedImportRows = null;
+}
+
+// ============ PARSE PASTED DATA ============
+function parsePastedData(raw) {
+  var lines = raw.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; });
+  var validRows = [], errorRows = [];
+
+  lines.forEach(function(line, idx) {
+    // Support tab or comma delimiters
+    var parts;
+    if (line.indexOf('\t') !== -1) {
+      parts = line.split('\t').map(function(p) { return p.trim(); });
+    } else {
+      parts = line.split(',').map(function(p) { return p.trim(); });
+    }
+
+    if (parts.length < 2) {
+      errorRows.push({ line: idx+1, raw: line, reason: 'Missing grade column' });
+      return;
+    }
+
+    var name = parts[0];
+    var gradeRaw = parts[1];
+    var periodOverride = parts[2] || null;
+
+    if (!name) {
+      errorRows.push({ line: idx+1, raw: line, reason: 'Empty student name' });
+      return;
+    }
+
+    // Handle dual grades (e.g. "88 / 90" or "88, 90" as single cell)
+    var gradeDisplay, grade;
+    if (gradeRaw.indexOf('/') !== -1 || (gradeRaw.match(/\d+\s*[,]\s*\d+/) && parts.length === 2)) {
+      // dual grade in one cell
+      var gparts = gradeRaw.split(/[\/,]/).map(function(g) { return g.trim(); });
+      if (gparts.length === 2 && !isNaN(gparts[0]) && !isNaN(gparts[1])) {
+        grade = gparts[0] + ', ' + gparts[1];
+        gradeDisplay = grade;
+      } else {
+        errorRows.push({ line: idx+1, raw: line, reason: 'Invalid grade format: ' + gradeRaw });
+        return;
+      }
+    } else {
+      grade = parseFloat(gradeRaw);
+      if (isNaN(grade) || grade < 0 || grade > 100) {
+        errorRows.push({ line: idx+1, raw: line, reason: 'Grade must be 0–100, got: ' + gradeRaw });
+        return;
+      }
+      gradeDisplay = grade.toString();
+    }
+
+    validRows.push({ name: name, grade: gradeDisplay, periodOverride: periodOverride });
+  });
+
+  return { valid: validRows, errors: errorRows };
+}
+
+// ============ NORMALIZE PERIOD STRING ============
+function normalizePeriod(str) {
+  if (!str) return null;
+  var s = str.toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (s.includes('firstsecond') || s.includes('1stand2nd') || s.includes('bothem')) return 'first-second-sem';
+  if (s.includes('firstsem') || s.includes('1stsem') || s.includes('semester1')) return 'first-sem';
+  if (s.includes('secondsem') || s.includes('2ndsem') || s.includes('semester2')) return 'second-sem';
+  if (s.includes('firstgrad') || s.includes('1stgrad')) return 'first-grading';
+  if (s.includes('secondgrad') || s.includes('2ndgrad')) return 'second-grading';
+  if (s.includes('thirdgrad') || s.includes('3rdgrad')) return 'third-grading';
+  if (s.includes('fourthgrad') || s.includes('4thgrad')) return 'fourth-grading';
+  if (s.includes('midterm')) return 'midterm';
+  if (s.includes('finals') || s.includes('final')) return 'finals';
+  return null;
+}
+
+// ============ PREVIEW IMPORT ============
+function previewImport() {
+  var raw = document.getElementById('paste-area').value.trim();
+  if (!raw) { showToast('Please paste some data first.', 'warning'); return; }
+
+  var parsed = parsePastedData(raw);
+  window._parsedImportRows = parsed.valid;
+
+  var previewEl = document.getElementById('import-preview');
+  previewEl.className = 'import-preview show';
+
+  var html = '<h4><i class="fas fa-eye"></i> Import Preview</h4>';
+  html += '<div class="preview-stats">';
+  html += '<div class="preview-stat">✅ Valid rows: <span>' + parsed.valid.length + '</span></div>';
+  if (parsed.errors.length > 0) html += '<div class="preview-stat" style="background:#fff0f0;color:#c62828;">⚠️ Errors: <span>' + parsed.errors.length + '</span></div>';
+  html += '</div>';
+
+  if (parsed.errors.length > 0) {
+    html += '<div class="preview-errors"><strong>⚠️ Rows with issues (will be skipped):</strong><ul>';
+    parsed.errors.forEach(function(e) { html += '<li>Row ' + e.line + ': "' + e.raw + '" — ' + e.reason + '</li>'; });
+    html += '</ul></div>';
+  }
+
+  if (parsed.valid.length > 0) {
+    var defaultPeriod = document.getElementById('import-grading-period').value;
+    html += '<table class="preview-rows-table"><thead><tr><th>#</th><th>Name</th><th>Grade</th><th>Period</th></tr></thead><tbody>';
+    parsed.valid.forEach(function(row, i) {
+      var period = (row.periodOverride ? normalizePeriod(row.periodOverride) : null) || defaultPeriod;
+      html += '<tr class="row-ok"><td>' + (i+1) + '</td><td>' + row.name + '</td><td>' + row.grade + '</td><td>' + getPeriodDisplay(period) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+  } else {
+    html += '<p style="color:#999;font-style:italic;margin-top:0.5rem;">No valid rows found.</p>';
+  }
+
+  previewEl.innerHTML = html;
+
+  if (parsed.valid.length > 0) {
+    document.getElementById('confirm-import-btn').style.display = '';
+    showToast('Preview ready! Review below, then click Confirm & Import.', 'success');
+  } else {
+    document.getElementById('confirm-import-btn').style.display = 'none';
+    showToast('No valid rows to import. Check your data format.', 'error');
+  }
+}
+
+// ============ CONFIRM IMPORT ============
+function confirmImport() {
+  var rows = window._parsedImportRows;
+  if (!rows || rows.length === 0) { showToast('Nothing to import.', 'warning'); return; }
+
+  var studentType = document.getElementById('import-student-type').value;
+  var defaultPeriod = document.getElementById('import-grading-period').value;
+
+  var details, group;
+  if (studentType === 'college') {
+    details = document.getElementById('import-course').value;
+    group = 'Course: ' + details;
+  } else {
+    details = document.getElementById('import-section-input').value.trim();
+    if (!details) { showToast('Please enter a section name before importing.', 'error'); return; }
+    group = details;
+  }
+
+  if (!gradesData[group]) gradesData[group] = [];
+
+  rows.forEach(function(row) {
+    var period = (row.periodOverride ? normalizePeriod(row.periodOverride) : null) || defaultPeriod;
+    var detailsText = studentType === 'college' ? 'Course: ' + details : 'Section: ' + details;
+    gradesData[group].push({
+      name: row.name,
+      studentType: studentType,
+      gradingPeriod: period,
+      periodDisplay: getPeriodDisplay(period),
+      details: details,
+      detailsText: detailsText,
+      grade: row.grade,
+      gradeDisplay: row.grade
+    });
+  });
+
+  saveData();
+  renderTables();
+
+  // Clear import area
+  clearPaste();
+  document.getElementById('confirm-import-btn').style.display = 'none';
+
+  showToast(rows.length + ' student' + (rows.length > 1 ? 's' : '') + ' imported successfully!');
+}
+
+// ============ PERIOD DISPLAY ============
+function getPeriodDisplay(period) {
+  var map = {
+    'first-sem': 'First Semester',
+    'second-sem': 'Second Semester',
+    'first-second-sem': 'First & Second Semester',
+    'first-grading': 'First Grading',
+    'second-grading': 'Second Grading',
+    'third-grading': 'Third Grading',
+    'fourth-grading': 'Fourth Grading',
+    'midterm': 'Midterm',
+    'finals': 'Finals'
+  };
+  return map[period] || period;
+}
+
+// ============ ORIGINAL FORM LOGIC ============
+var studentTypeSelect = document.getElementById('student-type');
+var detailsLabel = document.getElementById('details-label');
+var detailsInput = document.getElementById('details');
+var gradingPeriodSelect = document.getElementById('grading-period');
+var gradeInput = document.getElementById('grade');
+
+function updateGradeInput() {
+  var gp = gradingPeriodSelect.value;
+  if (gp === 'first-second-sem') {
+    gradeInput.type = 'text';
+    gradeInput.placeholder = 'Enter two grades separated by comma';
+    gradeInput.removeAttribute('min');
+    gradeInput.removeAttribute('max');
+  } else {
+    gradeInput.type = 'number';
+    gradeInput.placeholder = 'Enter grade';
+    gradeInput.setAttribute('min', '0');
+    gradeInput.setAttribute('max', '100');
+  }
+}
+gradingPeriodSelect.addEventListener('change', updateGradeInput);
+
+studentTypeSelect.addEventListener('change', function() {
+  if (this.value === 'college') {
+    document.getElementById('details-group').innerHTML = '<label for="details" id="details-label"><i class="fas fa-book"></i> Course</label><select id="details" required><option value="" disabled selected>Select course</option><option value="BSCS">BSCS</option><option value="EDUC">EDUC</option><option value="BSBA">BSBA</option><option value="Midwifery">Midwifery</option></select>';
+    gradingPeriodSelect.innerHTML = '<option value="" disabled selected>Select period</option><option value="first-sem">First Semester</option><option value="second-sem">Second Semester</option><option value="first-second-sem">First &amp; Second Semester</option>';
+  } else if (this.value === 'elementary') {
+    document.getElementById('details-group').innerHTML = '<label for="details" id="details-label"><i class="fas fa-users"></i> Section</label><input type="text" id="details" placeholder="Enter section" required />';
+    gradingPeriodSelect.innerHTML = '<option value="" disabled selected>Select period</option><option value="first-grading">First Grading</option><option value="second-grading">Second Grading</option><option value="third-grading">Third Grading</option><option value="fourth-grading">Fourth Grading</option>';
+  } else {
+    document.getElementById('details-group').innerHTML = '<label for="details" id="details-label"><i class="fas fa-info-circle"></i> Details</label><input type="text" id="details" placeholder="Course, etc." />';
+    gradingPeriodSelect.innerHTML = '<option value="" disabled selected>Select period</option><option value="first-sem">First Semester</option><option value="second-sem">Second Semester</option><option value="midterm">Midterm</option><option value="finals">Finals</option>';
+  }
+});
+
+// ============ DATA STORAGE ============
+var gradesData = {};
+
+function loadData() {
+  var u = localStorage.getItem('currentUser');
+  if (!u) return;
+  var d = localStorage.getItem('gradesData_' + u);
+  gradesData = d ? JSON.parse(d) : {};
+}
+
+function saveData() {
+  var u = localStorage.getItem('currentUser');
+  if (!u) return;
+  localStorage.setItem('gradesData_' + u, JSON.stringify(gradesData));
+}
+
+function printGroup(group, students) {
+  var pw = window.open('', '_blank');
+  var html = '<html><head><title>Grades for ' + group + '</title><style>body{font-family:Arial,sans-serif;margin:20px}h1{text-align:center;color:#2e7d32}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #000;padding:8px;text-align:left}th{background-color:#f0f0f0;font-weight:bold}</style></head><body><h1>Grades for ' + group + '</h1><table><thead><tr><th>Student</th><th>Student Type</th><th>Grading Period</th><th>Details</th><th>Grade</th></tr></thead><tbody>' + students.map(function(s) { return '<tr><td>' + s.name + '</td><td>' + (s.studentType === 'college' ? 'College' : 'Elementary') + '</td><td>' + s.periodDisplay + '</td><td>' + s.detailsText + '</td><td>' + s.gradeDisplay + '</td></tr>'; }).join('') + '</tbody></table></body></html>';
+  pw.document.write(html); pw.document.close(); pw.print();
+}
+
+function printAllGrades() {
+  var hasGrades = false;
+  for (var g in gradesData) { if (gradesData[g].length > 0) { hasGrades = true; break; } }
+  if (!hasGrades) { alert('No grades available to print.'); return; }
+
+  var currentUser = localStorage.getItem('currentUser');
+  var pw = window.open('', '_blank');
+  var date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  var totalStudents = 0, collegeStudents = 0, elementaryStudents = 0, totalCourses = 0;
+  for (var g in gradesData) {
+    if (gradesData[g].length > 0) {
+      totalCourses++;
+      gradesData[g].forEach(function(s) {
+        totalStudents++;
+        if (s.studentType === 'college') collegeStudents++;
+        else elementaryStudents++;
+      });
+    }
+  }
+
+  var html = '<!DOCTYPE html><html><head><title>All Grades Report</title><style>body{font-family:Arial,sans-serif;margin:40px;background:#fff;color:#333}.header{text-align:center;margin-bottom:40px;border-bottom:3px solid #2e7d32;padding-bottom:20px}.header h1{color:#2e7d32;font-size:32px;margin:0}.header .subtitle{color:#666;font-size:16px;margin-top:10px}.header .date{color:#888;font-size:14px;margin-top:5px;font-style:italic}.section{margin-bottom:50px}.section-header{background:linear-gradient(135deg,#2e7d32,#4caf50);color:white;padding:15px 20px;border-radius:8px 8px 0 0}.section-header h2{margin:0;font-size:22px}.section-header .cnt{font-size:14px;opacity:.9;margin-top:5px}table{width:100%;border-collapse:collapse}thead{background:#f5f5f5}th{text-align:left;padding:15px;font-weight:bold;color:#2e7d32;border:1px solid #ddd}td{padding:12px 15px;border:1px solid #ddd;font-size:13px}tbody tr:nth-child(even){background:#f9f9f9}.grade-cell{font-weight:bold;color:#2e7d32}.summary{background:#f5f9f7;padding:20px;border-radius:8px;margin-bottom:30px;border-left:4px solid #2e7d32}.summary h3{color:#2e7d32;margin-top:0}.footer{margin-top:50px;padding-top:20px;border-top:2px solid #e0e0e0;text-align:center;color:#888;font-size:12px}@media print{.section{page-break-inside:avoid}}</style></head><body>';
+  html += '<div class="header"><h1>Comprehensive Grades Report</h1><div class="subtitle">All Student Grades by Course/Section</div><div class="date">Generated on ' + date + '</div></div>';
+  html += '<div style="text-align:center;margin-bottom:30px;font-size:14px;color:#555">Teacher: <strong>' + (currentUser || 'N/A') + '</strong></div>';
+  html += '<div class="summary"><h3>Summary Overview</h3><span style="margin-right:30px">Total Students: <strong>' + totalStudents + '</strong></span><span style="margin-right:30px">Courses/Sections: <strong>' + totalCourses + '</strong></span><span style="margin-right:30px">College: <strong>' + collegeStudents + '</strong></span><span>Elementary: <strong>' + elementaryStudents + '</strong></span></div>';
+  for (var g in gradesData) {
+    var students = gradesData[g];
+    if (!students.length) continue;
+    html += '<div class="section"><div class="section-header"><h2>' + (g.startsWith('Course: ') ? g : 'Section: ' + g) + '</h2><div class="cnt">Total: ' + students.length + '</div></div><table><thead><tr><th>#</th><th>Student Name</th><th>Type</th><th>Grading Period</th><th>Grade</th></tr></thead><tbody>';
+    students.forEach(function(s, i) { html += '<tr><td>' + (i+1) + '</td><td>' + s.name + '</td><td>' + (s.studentType === 'college' ? 'College' : 'Elementary') + '</td><td>' + s.periodDisplay + '</td><td class="grade-cell">' + s.gradeDisplay + '</td></tr>'; });
+    html += '</tbody></table></div>';
+  }
+  html += '<div class="footer"><p>Official grade report — Teachers Portal System.</p><p>© ' + new Date().getFullYear() + ' Teachers Portal</p></div></body></html>';
+  pw.document.write(html); pw.document.close();
+  setTimeout(function() { pw.print(); }, 250);
+}
+
+document.getElementById('print-all-grades-btn').addEventListener('click', printAllGrades);
+
+// ============ RENDER TABLE ============
+function renderTables() {
+  var tbody = document.querySelector('#grade-list tbody');
+  tbody.innerHTML = '';
+  for (var group in gradesData) {
+    var students = gradesData[group];
+    if (!students.length) continue;
+    var headingTr = document.createElement('tr');
+    headingTr.classList.add('group-heading-row');
+    var headingTd = document.createElement('td');
+    headingTd.colSpan = 6;
+    headingTd.style.position = 'relative';
+    var groupTitle = document.createElement('span');
+    groupTitle.classList.add('group-title');
+    var icon = group.startsWith('Course: ') ? '<i class="fas fa-book"></i>' : '<i class="fas fa-users"></i>';
+    groupTitle.innerHTML = icon + ' ' + (group.startsWith('Course: ') ? group : 'Section: ' + group);
+    headingTd.appendChild(groupTitle);
+    var dlBtn = document.createElement('button');
+    dlBtn.classList.add('download-btn');
+    dlBtn.innerHTML = '<i class="fas fa-download"></i> Download/Print';
+    (function(grp, stds) { dlBtn.addEventListener('click', function() { printGroup(grp, stds); }); })(group, students);
+    headingTd.appendChild(dlBtn);
+    headingTr.appendChild(headingTd);
+    tbody.appendChild(headingTr);
+
+    students.forEach(function(student, index) {
+      var tr = document.createElement('tr');
+      ['name','studentType','periodDisplay','detailsText','gradeDisplay'].forEach(function(key, i) {
+        var td = document.createElement('td');
+        if (key === 'studentType') td.textContent = student[key] === 'college' ? 'College' : 'Elementary';
+        else td.textContent = student[key];
+        tr.appendChild(td);
+      });
+      var tdA = document.createElement('td');
+      tdA.classList.add('actions-cell');
+      var div = document.createElement('div');
+      div.classList.add('action-buttons');
+
+      var rmBtn = document.createElement('button');
+      rmBtn.classList.add('btn-remove');
+      rmBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Remove';
+      (function(grp, idx, nm) {
+        rmBtn.addEventListener('click', function() {
+          if (confirm('Remove student ' + nm + '?')) {
+            gradesData[grp].splice(idx, 1);
+            if (!gradesData[grp].length) delete gradesData[grp];
+            saveData(); renderTables();
+          }
+        });
+      })(group, index, student.name);
+
+      var edBtn = document.createElement('button');
+      edBtn.classList.add('btn-edit');
+      edBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Edit';
+      (function(grp, idx, std) {
+        edBtn.addEventListener('click', function() {
+          document.getElementById('student-name').value = std.name;
+          document.getElementById('student-type').value = std.studentType;
+          studentTypeSelect.dispatchEvent(new Event('change'));
+          setTimeout(function() {
+            document.getElementById('grading-period').value = std.gradingPeriod;
+            document.getElementById('details').value = std.details;
+            document.getElementById('grade').value = std.grade;
+            gradingPeriodSelect.dispatchEvent(new Event('change'));
+          }, 100);
+          gradesData[grp].splice(idx, 1);
+          if (!gradesData[grp].length) delete gradesData[grp];
+          saveData(); renderTables();
+        });
+      })(group, index, student);
+
+      div.appendChild(rmBtn); div.appendChild(edBtn);
+      tdA.appendChild(div); tr.appendChild(tdA);
+      tbody.appendChild(tr);
+    });
+  }
+}
+
+// ============ FORM SUBMIT ============
+var addStudentForm = document.getElementById('add-student-form');
+addStudentForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  var studentName = document.getElementById('student-name').value.trim();
+  var studentType = document.getElementById('student-type').value;
+  var gradingPeriod = document.getElementById('grading-period').value;
+  var details = document.getElementById('details').value.trim();
+  var grade = document.getElementById('grade').value.trim();
+
+  if (!studentName || !studentType || !gradingPeriod || grade === '' || !details) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+  var group = studentType === 'college' ? 'Course: ' + details : details;
+  var periodDisplay = getPeriodDisplay(gradingPeriod);
+  var gradeDisplay = grade;
+  if (gradingPeriod === 'first-second-sem') {
+    var grades = grade.split(',').map(function(g) { return g.trim(); });
+    if (grades.length !== 2 || grades.some(function(g) { return isNaN(g) || g === ''; })) {
+      alert('Please enter two valid grades separated by a comma for First & Second Semester.');
+      return;
+    }
+    gradeDisplay = grades.join(', ');
+  }
+  var detailsText = studentType === 'college' ? 'Course: ' + details : studentType === 'elementary' ? 'Section: ' + details : (details || '-');
+
+  if (!gradesData[group]) gradesData[group] = [];
+  gradesData[group].push({ name: studentName, studentType, gradingPeriod, periodDisplay, details, detailsText, grade, gradeDisplay });
+  saveData(); renderTables();
+  addStudentForm.reset();
+  gradingPeriodSelect.selectedIndex = 0;
+  studentTypeSelect.selectedIndex = 0;
+  document.getElementById('details-group').innerHTML = '<label for="details" id="details-label"><i class="fas fa-info-circle"></i> Details</label><input type="text" id="details" placeholder="Course, etc." />';
+});
+
+document.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter' && e.target.id === 'grade') { e.preventDefault(); document.getElementById('add-student-btn').click(); }
+});
+
+loadData();
+renderTables();
+</script>
+</body>
+</html>

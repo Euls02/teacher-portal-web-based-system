@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teachers Portal - Reports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-green: #2e7d32;
+      --dark-green: #1b5e20;
+      --light-green: #4caf50;
+      --accent-green: #66bb6a;
+      --bg-light: #f5f9f7;
+      --text-dark: #1b3a1a;
+      --text-medium: #33691e;
+      --border-light: #a5d6a7;
+      --shadow: rgba(46, 125, 50, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(135deg, #f5f9f7 0%, #e8f5e9 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* Header Styles */
+    header {
+      background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+      color: white;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    header h1 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    header .logo {
+      height: 55px;
+      width: auto;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      transition: transform 0.3s;
+    }
+
+    header .logo:hover {
+      transform: scale(1.05);
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-nav {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-nav:hover {
+      background-color: white;
+      color: var(--primary-green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .btn-nav.btn-active {
+      background-color: white;
+      color: var(--primary-green);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .btn-nav.btn-logout {
+      border-color: rgba(244, 67, 54, 0.8);
+      background-color: rgba(244, 67, 54, 0.1);
+      cursor: pointer;
+    }
+
+    .btn-nav.btn-logout:hover {
+      background-color: #f44336;
+      color: white;
+      border-color: #f44336;
+    }
+
+    /* Container Styles */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow);
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container h2 {
+      font-family: 'Crimson Pro', serif;
+      color: var(--primary-green);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    .container h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--light-green), transparent);
+      border-radius: 2px;
+    }
+
+    /* Button Styles */
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.9rem 1.8rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Work Sans', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+      color: white;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #388e3c, #66bb6a);
+      color: white;
+      box-shadow: 0 4px 15px rgba(56, 142, 60, 0.3);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 142, 60, 0.4);
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, #1976d2, #42a5f5);
+      color: white;
+      box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+    }
+
+    /* Report Section Styles */
+    .report-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 2px solid var(--border-light);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(245, 249, 247, 0.5), rgba(232, 245, 233, 0.5));
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+
+    .report-section:hover {
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .report-section h3 {
+      font-family: 'Crimson Pro', serif;
+      color: var(--primary-green);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: 2px solid var(--border-light);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-green), var(--light-green));
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.2);
+      border-color: var(--primary-green);
+    }
+
+    .stat-card h4 {
+      color: var(--text-medium);
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card p {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      font-family: 'Crimson Pro', serif;
+    }
+
+    /* Table Styles */
+    .report-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .report-table thead {
+      background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+      color: white;
+    }
+
+    .report-table thead th {
+      text-align: center;
+      padding: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    .report-table tbody tr {
+      transition: all 0.3s ease;
+    }
+
+    .report-table tbody tr:hover {
+      background-color: var(--bg-light);
+      transform: scale(1.01);
+    }
+
+    .report-table tbody td {
+      text-align: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .report-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Hide/Show Animation */
+    #reports-display {
+      display: none;
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    #reports-display.show {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      nav {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .btn-nav {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.8rem;
+      }
+
+      .container {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .report-table {
+        font-size: 0.85rem;
+      }
+
+      .report-table thead th,
+      .report-table tbody td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-chart-bar"></i> Teachers Portal - Reports</h1>
+    <nav>
+      <a href="home.html" class="btn-nav"><i class="fas fa-home"></i> Home</a>
+      <a href="events.html" class="btn-nav"><i class="fas fa-calendar-alt"></i> Events</a>
+      <a href="schedule.html" class="btn-nav"><i class="fas fa-clock"></i> Schedule</a>
+      <a href="grading.html" class="btn-nav"><i class="fas fa-graduation-cap"></i> Grading</a>
+      <a href="attendance.html" class="btn-nav"><i class="fas fa-user-check"></i> Attendance</a>
+      <a href="announcements.html" class="btn-nav"><i class="fas fa-bullhorn"></i> Announcements</a>
+      <a href="reports.html" class="btn-nav btn-active"><i class="fas fa-chart-bar"></i> Reports</a>
+       <a href="lessonplan.html" class="btn-nav"><i class="fas fa-book-open"></i> Lesson Plan</a>
+      <button onclick="logout()" class="btn-nav btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </nav>
+    <img src="2c41ee4a-1282-462a-ba5d-019375e704b4.jpg" alt="College Logo" class="logo" />
+  </header>
+
+  <section class="container">
+    <h2><i class="fas fa-file-chart-line"></i> Generate Reports</h2>
+
+    <div class="btn-group">
+      <button id="generate-report-btn" class="btn btn-primary">
+        <i class="fas fa-chart-line"></i> Generate Report
+      </button>
+      <button id="view-stats-btn" class="btn btn-secondary">
+        <i class="fas fa-chart-pie"></i> View Statistics
+      </button>
+      <button id="download-btn" class="btn btn-download" style="display: none;">
+        <i class="fas fa-download"></i> Download Report
+      </button>
+    </div>
+
+    <div id="reports-display">
+      <div class="report-section">
+        <h3><i class="fas fa-graduation-cap"></i> Grading Summary</h3>
+        <div class="stats-grid" id="grading-stats"></div>
+        <table id="grading-table" class="report-table" style="display: none;">
+          <thead>
+            <tr>
+              <th><i class="fas fa-user"></i> Student</th>
+              <th><i class="fas fa-book"></i> Course/Section</th>
+              <th><i class="fas fa-star"></i> Average Grade</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <h3><i class="fas fa-user-check"></i> Attendance Summary</h3>
+        <div class="stats-grid" id="attendance-stats"></div>
+        <table id="attendance-table" class="report-table" style="display: none;">
+          <thead>
+            <tr>
+              <th><i class="fas fa-user"></i> Student</th>
+              <th><i class="fas fa-book"></i> Course/Section</th>
+              <th><i class="fas fa-percentage"></i> Average Attendance %</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <h3><i class="fas fa-chart-line"></i> Overall Analytics</h3>
+        <div class="stats-grid" id="overall-stats">
+          <div class="stat-card">
+            <h4><i class="fas fa-trophy"></i> Top Students</h4>
+            <p id="top-students">N/A</p>
+          </div>
+          <div class="stat-card">
+            <h4><i class="fas fa-chart-pie"></i> Grade Distribution</h4>
+            <p id="grade-dist" style="font-size: 1rem;">N/A</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('currentUser');
+        location.href = 'index.html';
+      }
+    }
+
+    // Check if user is logged in
+    if (!localStorage.getItem('currentUser')) {
+      window.location.href = 'index.html';
+    }
+
+    let gradesData = {};
+    let attendanceData = {};
+
+    function loadData() {
+      const currentUser = localStorage.getItem('currentUser');
+      if (!currentUser) return;
+      const grades = localStorage.getItem('gradesData_' + currentUser);
+      const attendance = localStorage.getItem('attendanceData_' + currentUser);
+      if (grades) gradesData = JSON.parse(grades);
+      if (attendance) attendanceData = JSON.parse(attendance);
+    }
+
+    function generateGradingStats() {
+      const statsContainer = document.getElementById('grading-stats');
+      const table = document.getElementById('grading-table');
+      const tbody = table.querySelector('tbody');
+      tbody.innerHTML = '';
+
+      let totalStudents = 0;
+      let totalGrades = 0;
+      let avgGrade = 0;
+      const studentAverages = {};
+
+      for (const group in gradesData) {
+        gradesData[group].forEach(student => {
+          totalStudents++;
+          let gradeNum = parseFloat(student.gradeDisplay) || 0;
+          if (student.gradeDisplay.includes(',')) {
+            const grades = student.gradeDisplay.split(',').map(g => parseFloat(g.trim()) || 0);
+            gradeNum = grades.reduce((a, b) => a + b, 0) / grades.length;
+          }
+          totalGrades += gradeNum;
+          if (!studentAverages[student.name]) studentAverages[student.name] = { sum: 0, count: 0 };
+          studentAverages[student.name].sum += gradeNum;
+          studentAverages[student.name].count++;
+        });
+      }
+
+      if (totalStudents > 0) avgGrade = totalGrades / totalStudents;
+
+      statsContainer.innerHTML = `
+        <div class="stat-card">
+          <h4><i class="fas fa-users"></i> Total Students</h4>
+          <p>${totalStudents}</p>
+        </div>
+        <div class="stat-card">
+          <h4><i class="fas fa-star"></i> Average Grade</h4>
+          <p>${avgGrade.toFixed(2)}%</p>
+        </div>
+      `;
+
+      // Add student averages to table
+      for (const [name, data] of Object.entries(studentAverages)) {
+        const avg = data.sum / data.count;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${name}</td><td>-</td><td>${avg.toFixed(2)}%</td>`;
+        tbody.appendChild(tr);
+      }
+      table.style.display = 'table';
+    }
+
+    function generateAttendanceStats() {
+      const statsContainer = document.getElementById('attendance-stats');
+      const table = document.getElementById('attendance-table');
+      const tbody = table.querySelector('tbody');
+      tbody.innerHTML = '';
+
+      let totalRecords = 0;
+      let presentCount = 0;
+      const studentAttendance = {};
+
+      for (const group in attendanceData) {
+        attendanceData[group].forEach(record => {
+          totalRecords++;
+          if (record.status === 'present') presentCount++;
+          if (!studentAttendance[record.name]) studentAttendance[record.name] = { present: 0, total: 0 };
+          studentAttendance[record.name].total++;
+          if (record.status === 'present') studentAttendance[record.name].present++;
+        });
+      }
+
+      const avgAttendance = totalRecords > 0 ? (presentCount / totalRecords * 100) : 0;
+
+      statsContainer.innerHTML = `
+        <div class="stat-card">
+          <h4><i class="fas fa-clipboard-list"></i> Total Records</h4>
+          <p>${totalRecords}</p>
+        </div>
+        <div class="stat-card">
+          <h4><i class="fas fa-percentage"></i> Average Attendance</h4>
+          <p>${avgAttendance.toFixed(2)}%</p>
+        </div>
+      `;
+
+      // Add student percentages to table
+      for (const [name, data] of Object.entries(studentAttendance)) {
+        const percentage = data.total > 0 ? (data.present / data.total * 100) : 0;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${name}</td><td>-</td><td>${percentage.toFixed(2)}%</td>`;
+        tbody.appendChild(tr);
+      }
+      table.style.display = 'table';
+    }
+
+    function generateOverallStats() {
+      const topStudentsEl = document.getElementById('top-students');
+      const gradeDistEl = document.getElementById('grade-dist');
+
+      // Calculate top students based on average grades
+      const studentAverages = {};
+      let totalGrades = 0;
+      let gradeCount = 0;
+      const gradeRanges = { A: 0, B: 0, C: 0, D: 0, F: 0 };
+
+      for (const group in gradesData) {
+        gradesData[group].forEach(student => {
+          let gradeNum = parseFloat(student.gradeDisplay) || 0;
+          if (student.gradeDisplay.includes(',')) {
+            const grades = student.gradeDisplay.split(',').map(g => parseFloat(g.trim()) || 0);
+            gradeNum = grades.reduce((a, b) => a + b, 0) / grades.length;
+          }
+          totalGrades += gradeNum;
+          gradeCount++;
+
+          // Grade distribution
+          if (gradeNum >= 90) gradeRanges.A++;
+          else if (gradeNum >= 80) gradeRanges.B++;
+          else if (gradeNum >= 70) gradeRanges.C++;
+          else if (gradeNum >= 60) gradeRanges.D++;
+          else gradeRanges.F++;
+
+          // Student averages
+          if (!studentAverages[student.name]) studentAverages[student.name] = { sum: 0, count: 0 };
+          studentAverages[student.name].sum += gradeNum;
+          studentAverages[student.name].count++;
+        });
+      }
+
+      // Calculate averages and sort top students
+      const averages = Object.entries(studentAverages).map(([name, data]) => ({
+        name,
+        avg: data.sum / data.count
+      })).sort((a, b) => b.avg - a.avg);
+
+      const topStudents = averages.slice(0, 2).map(s => `${s.name} (${s.avg.toFixed(2)}%)`).join(', ') || 'N/A';
+
+      // Grade distribution percentages
+      const total = gradeCount || 1;
+      const dist = Object.entries(gradeRanges).map(([grade, count]) => `${grade}: ${(count / total * 100).toFixed(1)}%`).join(', ');
+
+      topStudentsEl.textContent = topStudents;
+      gradeDistEl.textContent = dist;
+    }
+
+    function generateReport() {
+      loadData();
+      const reportsDisplay = document.getElementById('reports-display');
+      reportsDisplay.style.display = 'block';
+      reportsDisplay.classList.add('show');
+      generateGradingStats();
+      generateAttendanceStats();
+      generateOverallStats();
+      document.getElementById('download-btn').style.display = 'inline-flex';
+    }
+
+    function downloadReport() {
+      // Simulate download (in real app, use jsPDF or similar)
+      const report = 'Full Report Generated - Download Simulated';
+      alert(report);
+    }
+
+    function viewStatistics() {
+      generateReport(); // Reuse generation for stats
+    }
+
+    document.getElementById('generate-report-btn').addEventListener('click', generateReport);
+    document.getElementById('view-stats-btn').addEventListener('click', viewStatistics);
+    document.getElementById('download-btn').addEventListener('click', downloadReport);
+
+    loadData();
+  </script>
+</body>
+</html>

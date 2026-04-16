@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teachers Portal - Schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <h1><i class="fas fa-clock"></i> Teachers Portal - Schedule</h1>
+  <nav>
+    <a href="home.html" class="btn-nav"><i class="fas fa-home"></i> Home</a>
+    <a href="events.html" class="btn-nav"><i class="fas fa-calendar-alt"></i> Events</a>
+    <a href="schedule.html" class="btn-nav btn-active"><i class="fas fa-clock"></i> Schedule</a>
+    <a href="grading.html" class="btn-nav"><i class="fas fa-graduation-cap"></i> Grading</a>
+    <a href="attendance.html" class="btn-nav"><i class="fas fa-user-check"></i> Attendance</a>
+    <a href="announcements.html" class="btn-nav"><i class="fas fa-bullhorn"></i> Announcements</a>
+    <a href="reports.html" class="btn-nav"><i class="fas fa-chart-bar"></i> Reports</a>
+     <a href="lessonplan.html" class="btn-nav"><i class="fas fa-book-open"></i> Lesson Plan</a>
+    <button onclick="logout()" class="btn-nav btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </nav>
+  <img src="2c41ee4a-1282-462a-ba5d-019375e704b4.jpg" alt="College Logo" class="logo" />
+</header>
+
+<section id="schedule-section" class="container">
+  <h2><i class="fas fa-tasks"></i> Schedule Activity</h2>
+  <div class="form-group">
+    <label for="schedule-activity"><i class="fas fa-clipboard-list"></i> Activity:</label>
+    <input type="text" id="schedule-activity" class="form-control" placeholder="Enter activity name" />
+  </div>
+  <button id="add-schedule-btn" class="btn btn-primary">
+    <i class="fas fa-plus"></i> Add Schedule
+  </button>
+  <div class="schedule-list" id="schedule-list"></div>
+</section>
+
+<section id="calendar-section" class="container">
+  <h2><i class="fas fa-calendar-check"></i> Select Weekdays</h2>
+  <div id="weekday-checkboxes">
+    <label>
+      <input type="checkbox" class="weekday-checkbox" value="0" />
+      <i class="fas fa-sun"></i> Sunday
+    </label>
+    <label>
+      <input type="checkbox" class="weekday-checkbox" value="1" />
+      <i class="fas fa-briefcase"></i> Monday
+    </label>
+    <label>
+      <input type="checkbox" class="weekday-checkbox" value="2" />
+      <i class="fas fa-briefcase"></i> Tuesday
+    </label>
+    <label>
+      <input type="checkbox" class="weekday-checkbox" value="3" />
+      <i class="fas fa-briefcase"></i> Wednesday
+    </label>
+    <label>
+      <input type="checkbox" class="weekday-checkbox" value="4" />
+      <i class="fas fa-briefcase"></i> Thursday
+    </label>
+    <label>
+      <input type="checkbox" class="weekday-checkbox" value="5" />
+      <i class="fas fa-briefcase"></i> Friday
+    </label>
+    <label>
+      <input type="checkbox" class="weekday-checkbox" value="6" />
+      <i class="fas fa-sun"></i> Saturday
+    </label>
+  </div>
+  <div id="calendar-container"></div>
+</section>
+
+<script src="schedule.js"></script>
+<script>
+  function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('currentUser');
+      location.href = 'index.html';
+    }
+  }
+
+  // Check if user is logged in
+  if (!localStorage.getItem('currentUser')) {
+    window.location.href = 'index.html';
+  }
+</script>
+</body>
+</html>

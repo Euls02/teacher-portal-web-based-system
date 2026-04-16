@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teachers Portal - Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+:root {
+  --primary-green: #2e7d32;
+  --dark-green: #1b5e20;
+  --light-green: #4caf50;
+  --accent-green: #66bb6a;
+  --bg-light: #f5f9f7;
+  --text-dark: #1b3a1a;
+  --text-medium: #33691e;
+  --border-light: #a5d6a7;
+  --shadow: rgba(46, 125, 50, 0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Work Sans', sans-serif;
+  background: linear-gradient(135deg, #f5f9f7 0%, #e8f5e9 100%);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+  color: white;
+  padding: 1.2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  animation: slideDown 0.5s ease-out;
+}
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+header h1 { font-family: 'Crimson Pro', serif; font-size: 1.8rem; font-weight: 700; letter-spacing: 0.5px; }
+header .logo { height: 55px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: transform 0.3s; }
+header .logo:hover { transform: scale(1.05); }
+nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.btn-nav {
+  background-color: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: white; padding: 0.6rem 1.2rem; border-radius: 10px;
+  font-weight: 600; text-decoration: none; transition: all 0.3s ease;
+  font-size: 0.95rem; backdrop-filter: blur(10px);
+}
+.btn-nav:hover { background-color: white; color: var(--primary-green); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.btn-nav.btn-active { background-color: white; color: var(--primary-green); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.btn-nav.btn-logout { border-color: rgba(244,67,54,0.8); background-color: rgba(244,67,54,0.1); cursor: pointer; }
+.btn-nav.btn-logout:hover { background-color: #f44336; color: white; border-color: #f44336; }
+
+/* Sections */
+section {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px var(--shadow);
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+section:nth-child(2) { animation-delay: 0.1s; }
+section:nth-child(3) { animation-delay: 0.2s; }
+section:nth-child(4) { animation-delay: 0.3s; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+section h2 {
+  font-family: 'Crimson Pro', serif;
+  color: var(--primary-green); font-size: 2rem;
+  margin-bottom: 1.5rem; position: relative;
+  padding-bottom: 1rem; text-align: center;
+}
+section h2::after {
+  content: '';
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100px; height: 4px;
+  background: linear-gradient(90deg, transparent, var(--light-green), transparent);
+  border-radius: 2px;
+}
+section h2 i { margin-right: 0.5rem; color: var(--light-green); }
+section p { font-size: 1.05rem; line-height: 1.8; color: var(--text-dark); margin-bottom: 1rem; text-align: justify; }
+section img { width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.15); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+section img:hover { transform: scale(1.02); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+
+#description-section { background: linear-gradient(135deg, rgba(46,125,50,0.05), rgba(56,142,60,0.05)); border: 2px solid var(--border-light); }
+#description-section h2 { color: var(--primary-green); font-size: 2.2rem; }
+#description-section p:first-of-type { font-size: 1.1rem; font-weight: 500; color: var(--text-medium); }
+
+/* Feature Grid */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: var(--bg-light);
+  padding: 1.5rem;
+  border-radius: 14px;
+  border-left: 4px solid var(--light-green);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(46,125,50,0.04), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.feature-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px var(--shadow); border-left-color: var(--primary-green); }
+.feature-card:hover::after { opacity: 1; }
+.feature-card i { font-size: 2rem; color: var(--light-green); margin-bottom: 0.5rem; display: block; }
+.feature-card h3 { font-family: 'Crimson Pro', serif; color: var(--primary-green); font-size: 1.15rem; margin-bottom: 0.4rem; }
+.feature-card p { font-size: 0.93rem; margin: 0; text-align: left; color: #555; }
+.feature-card .card-arrow {
+  position: absolute; top: 1rem; right: 1rem;
+  color: var(--border-light); font-size: 0.85rem;
+  transition: all 0.3s;
+}
+.feature-card:hover .card-arrow { color: var(--primary-green); transform: translateX(3px); }
+
+/* New badge */
+.new-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+  color: white; font-size: 0.65rem; font-weight: 700;
+  padding: 0.15rem 0.5rem; border-radius: 10px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  vertical-align: middle; margin-left: 0.4rem;
+}
+
+#teachers-seminar, #teacher-team-building { border-top: 5px solid var(--light-green); }
+
+@media (max-width: 768px) {
+  header { flex-direction: column; gap: 1rem; }
+  nav { width: 100%; justify-content: center; }
+  .btn-nav { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
+  section { padding: 1.5rem; margin: 1rem; }
+  section h2 { font-size: 1.6rem; }
+  .feature-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .feature-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><i class="fas fa-home"></i> Teachers Portal</h1>
+  <nav>
+    <a href="home.html" class="btn-nav btn-active"><i class="fas fa-home"></i> Home</a>
+    <a href="events.html" class="btn-nav"><i class="fas fa-calendar-alt"></i> Events</a>
+    <a href="schedule.html" class="btn-nav"><i class="fas fa-clock"></i> Schedule</a>
+    <a href="grading.html" class="btn-nav"><i class="fas fa-graduation-cap"></i> Grading</a>
+    <a href="attendance.html" class="btn-nav"><i class="fas fa-user-check"></i> Attendance</a>
+    <a href="announcements.html" class="btn-nav"><i class="fas fa-bullhorn"></i> Announcements</a>
+    <a href="reports.html" class="btn-nav"><i class="fas fa-chart-bar"></i> Reports</a>
+    <a href="lessonplan.html" class="btn-nav"><i class="fas fa-book-open"></i> Lesson Plan</a>
+    <button onclick="logout()" class="btn-nav btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </nav>
+  <img src="2c41ee4a-1282-462a-ba5d-019375e704b4.jpg" alt="College Logo" class="logo" />
+</header>
+
+<!-- Welcome Section -->
+<section id="description-section">
+  <h2><i class="fas fa-graduation-cap"></i> Welcome to the Teachers Portal</h2>
+  <p>
+    The Teachers Portal is a comprehensive web application designed to streamline and enhance the daily tasks of educators.
+    It provides an intuitive interface for managing academic events, schedules, grading, and lesson planning — all in one centralized platform.
+  </p>
+  <p>
+    Easily create and track important events such as holidays, exams, and special school activities with the interactive calendar.
+    Manage your teaching schedule efficiently by viewing and updating your timetable, ensuring you stay organized throughout the academic year.
+  </p>
+  <p>
+    The grading section allows for seamless input and management of student grades, helping you maintain accurate records and generate reports effortlessly.
+    Now with our new AI-powered Lesson Plan Generator, you can create complete, detailed lesson plans in seconds — just type a title and let the AI do the work.
+  </p>
+  <p>
+    With secure login and user-specific data storage, the Teachers Portal ensures your information is safe and personalized to your needs.
+  </p>
+
+  <!-- Feature Cards — all clickable links -->
+  <div class="feature-grid">
+
+    <a href="events.html" class="feature-card">
+      <i class="fas fa-calendar-check"></i>
+      <h3>Event Management</h3>
+      <p>Create and track academic events with an interactive calendar system.</p>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a href="schedule.html" class="feature-card">
+      <i class="fas fa-clock"></i>
+      <h3>Schedule Tracking</h3>
+      <p>Manage your teaching timetable and stay organized throughout the year.</p>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a href="grading.html" class="feature-card">
+      <i class="fas fa-award"></i>
+      <h3>Grade Management</h3>
+      <p>Input and manage student grades with ease and accuracy.</p>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a href="attendance.html" class="feature-card">
+      <i class="fas fa-user-check"></i>
+      <h3>Attendance</h3>
+      <p>Track student attendance efficiently for all your classes.</p>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a href="announcements.html" class="feature-card">
+      <i class="fas fa-bullhorn"></i>
+      <h3>Announcements</h3>
+      <p>Post and manage school announcements for your students.</p>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a href="reports.html" class="feature-card">
+      <i class="fas fa-chart-bar"></i>
+      <h3>Reports</h3>
+      <p>Generate and view comprehensive academic reports with ease.</p>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a href="lessonplan.html" class="feature-card" style="border-left-color: var(--primary-green); background: linear-gradient(135deg, rgba(46,125,50,0.06), rgba(76,175,80,0.06));">
+      <i class="fas fa-book-open" style="color: var(--primary-green);"></i>
+      <h3>Lesson Plan Generator <span class="new-badge">New</span></h3>
+      <p>Type a lesson title and AI instantly builds a complete, detailed lesson plan for you.</p>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+
+    <a href="#" class="feature-card" style="opacity:0.6; cursor:default; pointer-events:none;">
+      <i class="fas fa-shield-alt"></i>
+      <h3>Secure Access</h3>
+      <p>Your data is protected with secure login and personalized storage.</p>
+    </a>
+
+  </div>
+</section>
+
+<!-- Teachers Seminar Section -->
+<section id="teachers-seminar">
+  <h2><i class="fas fa-chalkboard-teacher"></i> TEACHERS SEMINAR</h2>
+  <img src="31249969797_09c8692197_b.jpg" alt="Teachers Seminar" />
+  <p>
+    Join us for an engaging and informative Teachers Seminar designed to empower educators with the latest teaching strategies, educational technologies, and collaborative opportunities. This seminar offers a comprehensive agenda featuring expert speakers, interactive workshops, and networking sessions aimed at enhancing professional development and fostering a supportive teaching community. Whether you are a seasoned educator or new to the profession, this seminar provides valuable insights and practical tools to elevate your teaching practice and positively impact student learning outcomes.
+  </p>
+</section>
+
+<!-- Teachers Team Building Section -->
+<section id="teacher-team-building">
+  <h2><i class="fas fa-users"></i> TEACHERS TEAM BUILDING</h2>
+  <img src="maxresdefault.jpg" alt="Teacher Team Building" />
+  <p>
+    Experience the power of collaboration and camaraderie in our Teacher Team Building events. These activities are designed to foster trust, communication, and teamwork among educators, creating a positive and supportive work environment. Through engaging exercises and challenges, teachers develop stronger relationships, enhance problem-solving skills, and build a cohesive community that translates into improved classroom dynamics and student success. Join us to strengthen your professional bonds and contribute to a thriving educational culture.
+  </p>
+</section>
+
+<script>
+  function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('currentUser');
+      location.href = 'index.html';
+    }
+  }
+  if (!localStorage.getItem('currentUser')) {
+    window.location.href = 'index.html';
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teachers Portal - Lesson Plan Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+:root {
+  --primary-green:#2e7d32;--dark-green:#1b5e20;--light-green:#4caf50;
+  --accent-green:#66bb6a;--pale-green:#c8e6c9;--bg-light:#f5f9f7;
+  --text-dark:#1b3a1a;--text-medium:#33691e;--border-light:#a5d6a7;
+  --shadow:rgba(46,125,50,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Work Sans',sans-serif;background:linear-gradient(135deg,#f5f9f7 0%,#e8f5e9 100%);color:var(--text-dark);min-height:100vh;}
+@keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dotBounce{0%,80%,100%{transform:scale(0.7);opacity:0.5}40%{transform:scale(1.2);opacity:1}}
+
+header{background:linear-gradient(135deg,var(--primary-green),var(--dark-green));color:white;padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px var(--shadow);position:sticky;top:0;z-index:1000;animation:slideDown 0.5s ease-out;}
+header h1{font-family:'Crimson Pro',serif;font-size:1.8rem;font-weight:700;}
+header .logo{height:55px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));transition:transform 0.3s;}
+header .logo:hover{transform:scale(1.05);}
+nav{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.btn-nav{background-color:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.3);color:white;padding:0.6rem 1.2rem;border-radius:10px;font-weight:600;text-decoration:none;transition:all 0.3s ease;font-size:0.95rem;}
+.btn-nav:hover{background-color:white;color:var(--primary-green);transform:translateY(-2px);}
+.btn-nav.btn-active{background-color:white;color:var(--primary-green);}
+.btn-nav.btn-logout{border-color:rgba(244,67,54,0.8);background-color:rgba(244,67,54,0.1);cursor:pointer;}
+.btn-nav.btn-logout:hover{background-color:#f44336;color:white;border-color:#f44336;}
+
+.page-wrapper{max-width:1100px;margin:2rem auto;padding:0 1.5rem 3rem;display:grid;grid-template-columns:340px 1fr;gap:1.5rem;align-items:start;}
+.page-title-bar{grid-column:1/-1;background:white;border-radius:18px;padding:1.8rem 2rem;box-shadow:0 6px 24px var(--shadow);display:flex;align-items:center;gap:1.5rem;animation:fadeInUp 0.5s ease-out;border-top:5px solid var(--light-green);}
+.page-title-bar .title-icon{width:60px;height:60px;border-radius:16px;flex-shrink:0;background:linear-gradient(135deg,var(--primary-green),var(--light-green));display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:white;box-shadow:0 4px 14px rgba(46,125,50,0.35);}
+.page-title-bar h2{font-family:'Crimson Pro',serif;font-size:2rem;color:var(--primary-green);line-height:1.1;}
+.page-title-bar p{font-size:0.95rem;color:#666;margin-top:0.3rem;}
+.ai-badge{margin-left:auto;flex-shrink:0;background:linear-gradient(135deg,#f47c20,#f59e0b);color:white;padding:0.5rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;display:flex;align-items:center;gap:0.4rem;box-shadow:0 3px 10px rgba(244,124,32,0.4);}
+
+.api-key-banner{background:linear-gradient(135deg,#fff8e1,#ffecb3);border:2px solid #ffc107;border-radius:14px;padding:1.1rem 1.2rem;margin-bottom:1.3rem;transition:all 0.4s ease;}
+.api-key-banner.active{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-color:#66bb6a;}
+.banner-title{display:flex;align-items:center;gap:0.5rem;font-weight:700;color:#e65100;font-size:0.95rem;margin-bottom:0.5rem;}
+.api-key-banner.active .banner-title{color:var(--primary-green);}
+.api-key-banner p{font-size:0.82rem;color:#5d3a00;line-height:1.6;margin-bottom:0.7rem;}
+.api-key-banner.active p{color:var(--text-medium);}
+.api-key-banner a{color:#e65100;font-weight:700;text-decoration:none;}
+.api-key-banner a:hover{text-decoration:underline;}
+.steps-box{background:white;border-radius:8px;padding:0.7rem 0.9rem;margin-bottom:0.7rem;border:1px solid #ffe082;font-size:0.82rem;color:#4a3000;line-height:1.8;}
+.steps-box strong{color:#e65100;}
+.api-key-input-row{display:flex;gap:0.5rem;}
+.api-key-input-row input{flex:1;padding:0.55rem 0.9rem;border:1.5px solid #ffc107;border-radius:8px;font-size:0.85rem;font-family:monospace;background:white;color:#1b3a1a;}
+.api-key-input-row input:focus{outline:none;border-color:#e65100;}
+.api-key-save-btn{padding:0.55rem 1.1rem;background:#e65100;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.85rem;white-space:nowrap;}
+.api-key-save-btn:hover{background:#bf360c;}
+.api-key-status{margin-top:0.6rem;font-size:0.8rem;font-weight:600;display:flex;align-items:center;gap:0.4rem;}
+.api-key-status.ok{color:#2e7d32;}
+.api-key-status.err{color:#c62828;}
+.change-key-btn{margin-top:0.5rem;background:none;border:1px solid #a5d6a7;color:var(--primary-green);padding:0.3rem 0.8rem;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'Work Sans',sans-serif;}
+.change-key-btn:hover{background:var(--pale-green);}
+
+.form-panel{background:white;border-radius:18px;padding:1.8rem;box-shadow:0 6px 24px var(--shadow);animation:fadeInUp 0.6s ease-out 0.1s both;position:sticky;top:100px;}
+.form-panel h3{font-family:'Crimson Pro',serif;font-size:1.35rem;color:var(--primary-green);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;padding-bottom:0.8rem;border-bottom:2px solid var(--pale-green);}
+.form-group{margin-bottom:1.2rem;}
+.form-group label{display:block;font-weight:600;margin-bottom:0.45rem;color:var(--text-medium);font-size:0.9rem;}
+.form-group label i{margin-right:0.4rem;color:var(--light-green);}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.75rem 1rem;border:2px solid var(--border-light);border-radius:10px;font-size:0.95rem;color:var(--text-dark);background:white;font-family:'Work Sans',sans-serif;transition:all 0.3s ease;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary-green);box-shadow:0 0 0 4px rgba(46,125,50,0.1);}
+.form-group textarea{resize:vertical;min-height:80px;line-height:1.5;}
+#lesson-title{font-size:1.05rem;font-weight:600;border-color:var(--primary-green);}
+.generate-btn{width:100%;padding:1rem;background:linear-gradient(135deg,var(--primary-green),var(--light-green));color:white;border:none;border-radius:12px;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:'Work Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:0.6rem;box-shadow:0 5px 18px rgba(46,125,50,0.35);transition:all 0.3s ease;margin-top:0.5rem;}
+.generate-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(46,125,50,0.45);}
+.generate-btn:disabled{opacity:0.7;cursor:not-allowed;}
+.divider{display:flex;align-items:center;gap:0.7rem;margin:1.3rem 0;}
+.divider hr{flex:1;border:none;border-top:1px solid var(--pale-green);}
+.divider span{font-size:0.8rem;color:#aaa;font-weight:500;white-space:nowrap;}
+.saved-plan-item{display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.8rem;border-radius:8px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;margin-bottom:0.4rem;}
+.saved-plan-item:hover{background:var(--bg-light);border-color:var(--border-light);}
+.saved-plan-item .plan-name{flex:1;font-size:0.88rem;font-weight:500;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.saved-plan-item .plan-date{font-size:0.75rem;color:#aaa;flex-shrink:0;}
+.saved-plan-item .del-plan{background:none;border:none;cursor:pointer;color:#ccc;font-size:0.85rem;padding:0.2rem;transition:color 0.2s;}
+.saved-plan-item .del-plan:hover{color:#f44336;}
+.no-saved{text-align:center;font-size:0.88rem;color:#bbb;font-style:italic;padding:1rem 0;}
+
+.output-panel{background:white;border-radius:18px;padding:2rem;box-shadow:0 6px 24px var(--shadow);animation:fadeInUp 0.6s ease-out 0.2s both;min-height:500px;display:flex;flex-direction:column;}
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#ccc;padding:2rem;}
+.empty-state .empty-icon{font-size:4rem;margin-bottom:1rem;opacity:0.4;}
+.empty-state h3{font-family:'Crimson Pro',serif;font-size:1.5rem;color:#bbb;margin-bottom:0.5rem;}
+.empty-state p{font-size:0.9rem;color:#ccc;max-width:280px;}
+.loading-state{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;}
+.loading-state.active{display:flex;}
+.loading-dots{display:flex;gap:0.5rem;}
+.loading-dots span{width:12px;height:12px;border-radius:50%;background:var(--light-green);animation:dotBounce 1.2s infinite;}
+.loading-dots span:nth-child(2){animation-delay:0.2s;}
+.loading-dots span:nth-child(3){animation-delay:0.4s;}
+.loading-text{font-size:1rem;color:var(--text-medium);font-weight:500;}
+.loading-subtext{font-size:0.85rem;color:#aaa;max-width:300px;text-align:center;}
+.plan-output{display:none;flex-direction:column;flex:1;}
+.plan-output.active{display:flex;}
+.plan-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap;}
+.plan-header-info h3{font-family:'Crimson Pro',serif;font-size:1.7rem;color:var(--primary-green);line-height:1.2;}
+.plan-meta{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;}
+.plan-chip{background:var(--bg-light);border:1px solid var(--border-light);padding:0.25rem 0.7rem;border-radius:20px;font-size:0.78rem;font-weight:600;color:var(--text-medium);display:flex;align-items:center;gap:0.3rem;}
+.plan-chip i{color:var(--light-green);}
+.plan-actions{display:flex;gap:0.5rem;flex-shrink:0;}
+.plan-action-btn{background:var(--bg-light);border:2px solid var(--border-light);color:var(--primary-green);padding:0.55rem 1rem;border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;gap:0.4rem;font-family:'Work Sans',sans-serif;transition:all 0.25s;}
+.plan-action-btn:hover{background:var(--primary-green);color:white;border-color:var(--primary-green);}
+.plan-action-btn.btn-save{background:linear-gradient(135deg,var(--primary-green),var(--light-green));color:white;border-color:transparent;}
+.plan-action-btn.btn-save:hover{box-shadow:0 4px 14px rgba(46,125,50,0.4);transform:translateY(-1px);}
+.plan-section{margin-bottom:1.2rem;border:1.5px solid #e8f5e9;border-radius:12px;overflow:hidden;}
+.plan-section-header{background:linear-gradient(135deg,rgba(46,125,50,0.07),rgba(76,175,80,0.07));padding:0.85rem 1.1rem;display:flex;align-items:center;gap:0.6rem;border-bottom:1.5px solid #e8f5e9;cursor:pointer;user-select:none;}
+.plan-section-header:hover{background:linear-gradient(135deg,rgba(46,125,50,0.12),rgba(76,175,80,0.12));}
+.section-icon{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,var(--primary-green),var(--light-green));display:flex;align-items:center;justify-content:center;color:white;font-size:0.85rem;}
+.plan-section-header h4{font-family:'Crimson Pro',serif;font-size:1.05rem;font-weight:700;color:var(--primary-green);flex:1;}
+.section-toggle-chevron{color:var(--accent-green);transition:transform 0.3s;font-size:0.85rem;}
+.section-toggle-chevron.open{transform:rotate(180deg);}
+.plan-section-body{padding:1rem 1.1rem;font-size:0.93rem;line-height:1.7;color:var(--text-dark);}
+.plan-section-body ul,.plan-section-body ol{margin-left:1.3rem;}
+.plan-section-body li{margin-bottom:0.3rem;}
+.plan-section-body strong{color:var(--primary-green);}
+.plan-section-body p{margin-bottom:0.6rem;}
+.plan-section-body[contenteditable="true"]{outline:2px dashed var(--border-light);border-radius:6px;padding:0.8rem;background:#fafff9;}
+.plan-section-body[contenteditable="true"]:focus{outline:2px solid var(--primary-green);}
+.time-table{width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.88rem;}
+.time-table th{background:var(--bg-light);color:var(--primary-green);font-weight:700;padding:0.5rem 0.7rem;text-align:left;border-bottom:2px solid var(--border-light);}
+.time-table td{padding:0.5rem 0.7rem;border-bottom:1px solid #f0f9f0;vertical-align:top;}
+.time-table tr:last-child td{border-bottom:none;}
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark-green);color:white;padding:0.9rem 1.4rem;border-radius:12px;font-weight:600;font-size:0.92rem;box-shadow:0 8px 24px rgba(0,0,0,0.2);z-index:9999;display:flex;align-items:center;gap:0.5rem;opacity:0;transform:translateY(20px);transition:all 0.4s ease;max-width:420px;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.error{background:#c62828;}
+.toast.warning{background:#e65100;}
+@media print{header,.form-panel,.plan-actions,.page-title-bar{display:none!important}.page-wrapper{display:block}.output-panel{box-shadow:none;padding:0}}
+@media(max-width:860px){.page-wrapper{grid-template-columns:1fr}.form-panel{position:static}header{flex-direction:column;gap:1rem}nav{width:100%;justify-content:center}.btn-nav{font-size:0.82rem;padding:0.45rem 0.7rem}.ai-badge{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><i class="fas fa-chalkboard-teacher"></i> Teachers Portal</h1>
+  <nav>
+    <a href="home.html" class="btn-nav"><i class="fas fa-home"></i> Home</a>
+    <a href="events.html" class="btn-nav"><i class="fas fa-calendar-alt"></i> Events</a>
+    <a href="schedule.html" class="btn-nav"><i class="fas fa-clock"></i> Schedule</a>
+    <a href="grading.html" class="btn-nav"><i class="fas fa-graduation-cap"></i> Grading</a>
+    <a href="attendance.html" class="btn-nav"><i class="fas fa-user-check"></i> Attendance</a>
+    <a href="announcements.html" class="btn-nav"><i class="fas fa-bullhorn"></i> Announcements</a>
+    <a href="reports.html" class="btn-nav"><i class="fas fa-chart-bar"></i> Reports</a>
+    <a href="lessonplan.html" class="btn-nav btn-active"><i class="fas fa-book-open"></i> Lesson Plan</a>
+    <button onclick="logout()" class="btn-nav btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </nav>
+  <img src="2c41ee4a-1282-462a-ba5d-019375e704b4.jpg" alt="College Logo" class="logo" />
+</header>
+
+<div class="page-wrapper">
+  <div class="page-title-bar">
+    <div class="title-icon"><i class="fas fa-book-open"></i></div>
+    <div>
+      <h2>AI Lesson Plan Generator</h2>
+      <p>Type your lesson title and let AI instantly build a complete, detailed lesson plan for you.</p>
+    </div>
+    <div class="ai-badge"><i class="fas fa-bolt"></i> Groq AI &mdash; Free &amp; Fast</div>
+  </div>
+
+  <div class="form-panel">
+    <h3><i class="fas fa-sliders-h"></i> Plan Settings</h3>
+
+    <div class="api-key-banner" id="api-key-banner">
+      <div class="banner-title"><i class="fas fa-key"></i> <span id="banner-title-text">Connect Free Groq AI</span></div>
+      <p id="banner-desc">Groq is <strong>100% free</strong>, very fast, and has generous limits — no payment needed.</p>
+      <div class="steps-box" id="steps-box">
+        <strong>Get your free key (1 minute):</strong><br>
+        1. Go to <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a><br>
+        2. Sign up free with Google or email<br>
+        3. Click <strong>"Create API Key"</strong> → copy it<br>
+        4. Paste it below and click Save
+      </div>
+      <div class="api-key-input-row" id="key-input-row">
+        <input type="password" id="api-key-input" placeholder="gsk_..." autocomplete="off" />
+        <button class="api-key-save-btn" onclick="saveApiKey()"><i class="fas fa-check"></i> Save</button>
+      </div>
+      <div class="api-key-status" id="api-key-status" style="display:none"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="lesson-title"><i class="fas fa-lightbulb"></i> Lesson Title <span style="color:#f44336">*</span></label>
+      <input type="text" id="lesson-title" placeholder="e.g. Introduction to Photosynthesis" autocomplete="off" />
+    </div>
+    <div class="form-group">
+      <label for="subject"><i class="fas fa-book"></i> Subject / Course</label>
+      <input type="text" id="subject" placeholder="e.g. Science, Math, English" />
+    </div>
+    <div class="form-group">
+      <label for="grade-level"><i class="fas fa-layer-group"></i> Grade / Year Level</label>
+      <select id="grade-level">
+        <option>Grade 1</option><option>Grade 2</option><option>Grade 3</option>
+        <option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option>
+        <option value="Grade 7">Grade 7 (1st Year HS)</option>
+        <option value="Grade 8">Grade 8 (2nd Year HS)</option>
+        <option value="Grade 9">Grade 9 (3rd Year HS)</option>
+        <option value="Grade 10">Grade 10 (4th Year HS)</option>
+        <option value="Grade 11">Grade 11 (Senior HS)</option>
+        <option value="Grade 12">Grade 12 (Senior HS)</option>
+        <option>College – Freshman</option><option>College – Sophomore</option>
+        <option>College – Junior</option><option>College – Senior</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="duration"><i class="fas fa-clock"></i> Duration</label>
+      <select id="duration">
+        <option>30 minutes</option><option>45 minutes</option>
+        <option selected>60 minutes (1 hour)</option>
+        <option>90 minutes (1.5 hours)</option>
+        <option>2 hours</option><option>3 hours (lab/workshop)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="approach"><i class="fas fa-chalkboard"></i> Teaching Approach</label>
+      <select id="approach">
+        <option>Lecture and Discussion</option><option>Inquiry-Based Learning</option>
+        <option>Cooperative Learning</option><option>Project-Based Learning</option>
+        <option>Demonstration</option><option>Socratic Method</option>
+        <option>Flipped Classroom</option><option>Direct Instruction</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="extra-notes"><i class="fas fa-sticky-note"></i> Special Notes (optional)</label>
+      <textarea id="extra-notes" placeholder="e.g. Include lab activity, focus on Filipino context..."></textarea>
+    </div>
+
+    <button class="generate-btn" id="generate-btn" onclick="generateLessonPlan()">
+      <i class="fas fa-magic"></i> Generate Lesson Plan
+    </button>
+
+    <div class="divider"><hr><span>Saved Plans</span><hr></div>
+    <div id="saved-plans-list"><p class="no-saved" id="no-saved-msg">No saved plans yet.</p></div>
+  </div>
+
+  <div class="output-panel">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon"><i class="fas fa-file-alt"></i></div>
+      <h3>Your lesson plan will appear here</h3>
+      <p>Fill in the details on the left and click <strong>"Generate Lesson Plan"</strong> to get started.</p>
+    </div>
+    <div class="loading-state" id="loading-state">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-text"><i class="fas fa-bolt"></i> &nbsp;Groq AI is generating your lesson plan…</div>
+      <div class="loading-subtext">Usually done in under 5 seconds!</div>
+    </div>
+    <div class="plan-output" id="plan-output">
+      <div class="plan-header">
+        <div class="plan-header-info">
+          <h3 id="out-title"></h3>
+          <div class="plan-meta" id="out-meta"></div>
+        </div>
+        <div class="plan-actions">
+          <button class="plan-action-btn" onclick="toggleEditMode()"><i class="fas fa-pen" id="edit-icon"></i> <span id="edit-label">Edit</span></button>
+          <button class="plan-action-btn" onclick="printPlan()"><i class="fas fa-print"></i> Print</button>
+          <button class="plan-action-btn btn-save" onclick="savePlan()"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+      <div class="plan-content" id="plan-content"></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// AUTH
+if (!localStorage.getItem('currentUser')) window.location.href = 'index.html';
+function logout() { if (confirm('Log out?')) { localStorage.removeItem('currentUser'); location.href = 'index.html'; } }
+
+// API KEY
+var GKEY = 'groq_api_key_v1';
+function getKey() { return localStorage.getItem(GKEY) || ''; }
+
+function saveApiKey() {
+  var val = document.getElementById('api-key-input').value.trim();
+  var status = document.getElementById('api-key-status');
+  status.style.display = 'flex';
+  if (!val || !val.startsWith('gsk_')) {
+    status.className = 'api-key-status err';
+    status.innerHTML = '<i class="fas fa-times-circle"></i> Groq keys start with "gsk_". Please check and try again.';
+    return;
+  }
+  localStorage.setItem(GKEY, val);
+  showKeyActive();
+  showToast('Groq API key saved! Ready to generate.');
+}
+function showKeyActive() {
+  var banner = document.getElementById('api-key-banner');
+  banner.classList.add('active');
+  document.getElementById('banner-title-text').textContent = 'Groq AI Connected ✓';
+  document.getElementById('banner-desc').textContent = 'Your free Groq API key is active. Generate lesson plans for free!';
+  var sb = document.getElementById('steps-box'); if (sb) sb.style.display = 'none';
+  document.getElementById('key-input-row').style.display = 'none';
+  var status = document.getElementById('api-key-status');
+  status.style.display = 'flex'; status.className = 'api-key-status ok';
+  status.innerHTML = '<i class="fas fa-check-circle"></i> Ready! Fast and free.';
+  if (!document.getElementById('chg-btn')) {
+    var b = document.createElement('button'); b.id = 'chg-btn'; b.className = 'change-key-btn';
+    b.innerHTML = '<i class="fas fa-edit"></i> Change API Key';
+    b.onclick = function() { document.getElementById('key-input-row').style.display = 'flex'; document.getElementById('api-key-input').value = getKey(); b.remove(); };
+    banner.appendChild(b);
+  }
+}
+function initBanner() { if (getKey()) showKeyActive(); }
+
+// TOAST
+function showToast(msg, type) {
+  type = type || 'success';
+  var icons = { success:'fa-check-circle', error:'fa-times-circle', warning:'fa-exclamation-triangle' };
+  var t = document.getElementById('toast');
+  t.className = 'toast ' + type;
+  t.innerHTML = '<i class="fas ' + icons[type] + '"></i> ' + msg;
+  t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function(){ t.classList.remove('show'); }, 4000);
+}
+
+// SAVED PLANS
+var CU = localStorage.getItem('currentUser');
+var SK = 'lessonPlans_' + CU;
+function getSaved() { try { return JSON.parse(localStorage.getItem(SK)||'[]'); } catch(e){ return []; } }
+function setSaved(p) { localStorage.setItem(SK, JSON.stringify(p)); }
+function renderSavedList() {
+  var list = document.getElementById('saved-plans-list');
+  var plans = getSaved();
+  Array.from(list.querySelectorAll('.saved-plan-item')).forEach(function(el){ el.remove(); });
+  document.getElementById('no-saved-msg').style.display = plans.length ? 'none' : '';
+  plans.slice().reverse().forEach(function(plan, i) {
+    var ri = plans.length - 1 - i;
+    var item = document.createElement('div'); item.className = 'saved-plan-item';
+    item.innerHTML = '<i class="fas fa-file-alt" style="color:var(--light-green);flex-shrink:0;font-size:0.9rem"></i>' +
+      '<span class="plan-name" title="'+esc(plan.title)+'">'+esc(plan.title)+'</span>' +
+      '<span class="plan-date">'+new Date(plan.savedAt).toLocaleDateString('en-PH',{month:'short',day:'numeric'})+'</span>' +
+      '<button class="del-plan"><i class="fas fa-times"></i></button>';
+    item.querySelector('.plan-name').onclick = function(){ loadPlan(ri); };
+    item.querySelector('.del-plan').onclick = function(e){ e.stopPropagation(); delPlan(ri); };
+    list.appendChild(item);
+  });
+}
+function delPlan(i) { if (!confirm('Delete?')) return; var p=getSaved(); p.splice(i,1); setSaved(p); renderSavedList(); showToast('Deleted.','warning'); }
+function loadPlan(i) {
+  var plan = getSaved()[i]; if(!plan) return;
+  document.getElementById('out-title').textContent = plan.title;
+  buildChips(plan.subject, plan.gradeLevel, plan.duration, plan.approach);
+  document.getElementById('plan-content').innerHTML = plan.htmlContent;
+  showOutput(); showToast('Loaded: ' + plan.title);
+}
+
+// ── GENERATE ─────────────────────────────────────────────────────────────────
+var planData = null, editMode = false;
+
+async function generateLessonPlan() {
+  var title = document.getElementById('lesson-title').value.trim();
+  if (!title) { showToast('Please enter a lesson title first.','warning'); document.getElementById('lesson-title').focus(); return; }
+  var key = getKey();
+  if (!key) { document.getElementById('api-key-input').focus(); showToast('Please save your free Groq API key first.','warning'); return; }
+
+  var subject  = document.getElementById('subject').value.trim() || 'General';
+  var grade    = document.getElementById('grade-level').value;
+  var duration = document.getElementById('duration').value;
+  var approach = document.getElementById('approach').value;
+  var notes    = document.getElementById('extra-notes').value.trim();
+
+  planData = { title:title, subject:subject, gradeLevel:grade, duration:duration, approach:approach };
+  showLoading();
+
+  // Very explicit system prompt — forces pure JSON output
+  var systemPrompt = 'You are a lesson plan generator for Filipino teachers. ' +
+    'You ONLY output valid JSON. No markdown. No backticks. No explanation. No text before or after the JSON. ' +
+    'Start your response with { and end with }. Nothing else.';
+
+  var userPrompt = 'Create a lesson plan with these details:\n' +
+    '- Title: ' + title + '\n' +
+    '- Subject: ' + subject + '\n' +
+    '- Grade: ' + grade + '\n' +
+    '- Duration: ' + duration + '\n' +
+    '- Approach: ' + approach + '\n' +
+    (notes ? '- Notes: ' + notes + '\n' : '') +
+    '\nOutput ONLY this JSON structure (fill in all values):\n' +
+    '{\n' +
+    '  "overview": "2-3 sentence summary of the lesson",\n' +
+    '  "objectives": ["objective 1", "objective 2", "objective 3"],\n' +
+    '  "materials": ["material 1", "material 2", "material 3"],\n' +
+    '  "introduction": {\n' +
+    '    "duration": "X minutes",\n' +
+    '    "activities": ["activity 1", "activity 2"]\n' +
+    '  },\n' +
+    '  "lesson_proper": [\n' +
+    '    {"time": "0-15 min", "phase": "Presentation", "teacher_activity": "...", "student_activity": "..."},\n' +
+    '    {"time": "15-30 min", "phase": "Guided Practice", "teacher_activity": "...", "student_activity": "..."}\n' +
+    '  ],\n' +
+    '  "assessment": {\n' +
+    '    "formative": ["strategy 1", "strategy 2"],\n' +
+    '    "summative": "description of summative assessment"\n' +
+    '  },\n' +
+    '  "generalization": "key reflection question or activity",\n' +
+    '  "assignment": "homework or follow-up task",\n' +
+    '  "values_integration": "character value connected to this lesson",\n' +
+    '  "differentiation": {\n' +
+    '    "struggling": "support for struggling students",\n' +
+    '    "advanced": "extension for advanced students"\n' +
+    '  },\n' +
+    '  "references": ["reference 1", "reference 2"]\n' +
+    '}';
+
+  try {
+    var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + key
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user',   content: userPrompt }
+        ],
+        temperature: 0.5,
+        max_tokens: 3000,
+        response_format: { type: 'json_object' }  // Forces JSON output mode
+      })
+    });
+
+    if (!res.ok) {
+      var errBody = await res.json().catch(function(){ return {}; });
+      var errMsg = (errBody.error && errBody.error.message) ? errBody.error.message : 'Error ' + res.status;
+      showEmpty();
+      if (res.status === 401) {
+        showToast('Invalid Groq key. Please re-enter it.', 'error');
+        localStorage.removeItem(GKEY);
+        setTimeout(function(){ location.reload(); }, 2000);
+      } else if (res.status === 429) {
+        showToast('Rate limit hit. Please wait a few seconds and try again.', 'warning');
+      } else {
+        showToast('API Error: ' + errMsg, 'error');
+      }
+      return;
+    }
+
+    var data = await res.json();
+    var raw = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) ? data.choices[0].message.content : '';
+
+    // Aggressive cleanup — strip any markdown or surrounding text
+    raw = raw.trim();
+    raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
+
+    // Find the JSON object even if there's garbage around it
+    var start = raw.indexOf('{');
+    var end   = raw.lastIndexOf('}');
+    if (start === -1 || end === -1) {
+      showEmpty();
+      showToast('Could not parse AI response. Please try again.', 'error');
+      return;
+    }
+    raw = raw.substring(start, end + 1);
+
+    var plan = JSON.parse(raw);
+    renderPlan(plan, title, subject, grade, duration, approach);
+
+  } catch(err) {
+    console.error('Generation error:', err);
+    showEmpty();
+    if (err instanceof SyntaxError) {
+      // JSON parse failed — try again automatically once
+      showToast('AI returned bad format. Retrying…', 'warning');
+      setTimeout(generateLessonPlan, 1500);
+    } else {
+      showToast('Network error. Please check your connection.', 'error');
+    }
+  }
+}
+
+// RENDER
+function renderPlan(p, title, subject, grade, duration, approach) {
+  document.getElementById('out-title').textContent = title;
+  buildChips(subject, grade, duration, approach);
+  var h = '';
+  h += sec('fas fa-eye','Lesson Overview','<p>'+esc(p.overview||'')+'</p>');
+  h += sec('fas fa-bullseye','Learning Objectives','<ul>'+(p.objectives||[]).map(function(o){return '<li>'+esc(o)+'</li>';}).join('')+'</ul>');
+  h += sec('fas fa-toolbox','Materials & Resources','<ul>'+(p.materials||[]).map(function(m){return '<li>'+esc(m)+'</li>';}).join('')+'</ul>');
+  var intro = p.introduction||{};
+  h += sec('fas fa-door-open','Introduction / Motivation',
+    (intro.duration?'<p><strong>Duration:</strong> '+esc(intro.duration)+'</p>':'')+
+    '<ol>'+(intro.activities||[]).map(function(a){return '<li>'+esc(a)+'</li>';}).join('')+'</ol>');
+  h += sec('fas fa-chalkboard','Lesson Proper / Development',
+    '<table class="time-table"><thead><tr><th>Time</th><th>Phase</th><th>Teacher Activity</th><th>Student Activity</th></tr></thead><tbody>'+
+    (p.lesson_proper||[]).map(function(r){
+      return '<tr><td><strong>'+esc(r.time||'')+'</strong></td><td>'+esc(r.phase||'')+'</td><td>'+esc(r.teacher_activity||'')+'</td><td>'+esc(r.student_activity||'')+'</td></tr>';
+    }).join('')+'</tbody></table>');
+  var a = p.assessment||{};
+  h += sec('fas fa-tasks','Assessment',
+    (a.formative&&a.formative.length?'<p><strong>Formative:</strong></p><ul>'+a.formative.map(function(f){return '<li>'+esc(f)+'</li>';}).join('')+'</ul>':'')+
+    (a.summative?'<p style="margin-top:0.5rem"><strong>Summative:</strong> '+esc(a.summative)+'</p>':''));
+  h += sec('fas fa-comments','Generalization & Reflection','<p>'+esc(p.generalization||'')+'</p>');
+  h += sec('fas fa-clipboard-list','Assignment / Homework','<p>'+esc(p.assignment||'')+'</p>');
+  if (p.values_integration) h += sec('fas fa-heart','Values Integration','<p>'+esc(p.values_integration)+'</p>');
+  var d = p.differentiation||{};
+  var dh = (d.struggling?'<p><strong>Struggling Learners:</strong> '+esc(d.struggling)+'</p>':'')+
+           (d.advanced?'<p style="margin-top:0.5rem"><strong>Advanced Learners:</strong> '+esc(d.advanced)+'</p>':'');
+  if (dh) h += sec('fas fa-users','Differentiation Strategies',dh);
+  if (p.references&&p.references.length) h += sec('fas fa-book','References','<ul>'+p.references.map(function(r){return '<li>'+esc(r)+'</li>';}).join('')+'</ul>');
+  document.getElementById('plan-content').innerHTML = h;
+  showOutput();
+  showToast('Lesson plan generated successfully!');
+}
+
+function sec(icon,title,body){
+  return '<div class="plan-section"><div class="plan-section-header" onclick="toggleSec(this)"><div class="section-icon"><i class="'+icon+'"></i></div><h4>'+title+'</h4><i class="fas fa-chevron-down section-toggle-chevron open"></i></div><div class="plan-section-body">'+body+'</div></div>';
+}
+function toggleSec(hdr){
+  var b=hdr.nextElementSibling,c=hdr.querySelector('.section-toggle-chevron');
+  var hidden=b.style.display==='none';b.style.display=hidden?'':'none';c.classList.toggle('open',hidden);
+}
+function buildChips(s,g,d,a){
+  document.getElementById('out-meta').innerHTML=
+    [s?['fas fa-book',s]:null,g?['fas fa-layer-group',g]:null,d?['fas fa-clock',d]:null,a?['fas fa-chalkboard',a]:null]
+    .filter(Boolean).map(function(c){return '<span class="plan-chip"><i class="'+c[0]+'"></i> '+esc(c[1])+'</span>';}).join('');
+}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function showLoading(){
+  document.getElementById('empty-state').style.display='none';
+  document.getElementById('loading-state').classList.add('active');
+  document.getElementById('plan-output').classList.remove('active');
+  document.getElementById('generate-btn').disabled=true;
+  document.getElementById('generate-btn').innerHTML='<i class="fas fa-spinner fa-spin"></i> Generating…';
+}
+function showEmpty(){
+  document.getElementById('empty-state').style.display='';
+  document.getElementById('loading-state').classList.remove('active');
+  document.getElementById('plan-output').classList.remove('active');
+  document.getElementById('generate-btn').disabled=false;
+  document.getElementById('generate-btn').innerHTML='<i class="fas fa-magic"></i> Generate Lesson Plan';
+}
+function showOutput(){
+  document.getElementById('empty-state').style.display='none';
+  document.getElementById('loading-state').classList.remove('active');
+  document.getElementById('plan-output').classList.add('active');
+  document.getElementById('generate-btn').disabled=false;
+  document.getElementById('generate-btn').innerHTML='<i class="fas fa-redo"></i> Regenerate';
+}
+function toggleEditMode(){
+  editMode=!editMode;
+  document.querySelectorAll('.plan-section-body').forEach(function(b){b.contentEditable=editMode?'true':'false';});
+  document.getElementById('edit-icon').className=editMode?'fas fa-check':'fas fa-pen';
+  document.getElementById('edit-label').textContent=editMode?'Done':'Edit';
+  showToast(editMode?'Edit mode on — click any section to edit.':'Edit mode off.',editMode?'warning':'success');
+}
+function savePlan(){
+  if(!planData){showToast('Nothing to save yet.','warning');return;}
+  var plans=getSaved();
+  plans.push({title:planData.title,subject:planData.subject,gradeLevel:planData.gradeLevel,duration:planData.duration,approach:planData.approach,htmlContent:document.getElementById('plan-content').innerHTML,savedAt:Date.now()});
+  setSaved(plans);renderSavedList();showToast('Saved: '+planData.title);
+}
+function printPlan(){
+  var title=document.getElementById('out-title').textContent;
+  var pw=window.open('','_blank');
+  pw.document.write('<!DOCTYPE html><html><head><title>'+title+'</title><style>body{font-family:Georgia,serif;margin:40px;color:#1b3a1a}h1{text-align:center;color:#2e7d32;font-size:26px;margin-bottom:5px}.meta{text-align:center;color:#666;font-size:13px;margin-bottom:30px;border-bottom:2px solid #4caf50;padding-bottom:15px}.plan-section{margin-bottom:25px;border:1px solid #c8e6c9;border-radius:8px;overflow:hidden;break-inside:avoid}.plan-section-header{background:#e8f5e9;padding:10px 15px;display:flex;align-items:center;gap:10px}.plan-section-header h4{font-size:15px;color:#2e7d32;margin:0}.section-icon,.section-toggle-chevron{display:none}.plan-section-body{padding:12px 15px;font-size:13px;line-height:1.7}ul,ol{margin-left:20px}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#f1f8e9;color:#2e7d32;padding:8px;text-align:left;border:1px solid #c8e6c9}td{padding:7px 8px;border:1px solid #e0f2f1;vertical-align:top}strong{color:#2e7d32}@media print{.plan-section{break-inside:avoid}}</style></head><body><h1>'+title+'</h1><div class="meta">'+document.getElementById('out-meta').innerText+' | Generated: '+new Date().toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'})+'</div>'+document.getElementById('plan-content').innerHTML+'</body></html>');
+  pw.document.close();setTimeout(function(){pw.print();},300);
+}
+
+document.getElementById('lesson-title').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();generateLessonPlan();}});
+document.getElementById('api-key-input').addEventListener('keydown',function(e){if(e.key==='Enter')saveApiKey();});
+
+initBanner();
+renderSavedList();
+</script>
+</body>
+</html>

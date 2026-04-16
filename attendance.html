@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teachers Portal - Attendance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-green: #2e7d32;
+      --dark-green: #1b5e20;
+      --light-green: #4caf50;
+      --accent-green: #66bb6a;
+      --bg-light: #f5f9f7;
+      --text-dark: #1b3a1a;
+      --text-medium: #33691e;
+      --border-light: #a5d6a7;
+      --shadow: rgba(46, 125, 50, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(135deg, #f5f9f7 0%, #e8f5e9 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* Header Styles */
+    header {
+      background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+      color: white;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    header h1 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    header .logo {
+      height: 55px;
+      width: auto;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      transition: transform 0.3s;
+    }
+
+    header .logo:hover {
+      transform: scale(1.05);
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-nav {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-nav:hover {
+      background-color: white;
+      color: var(--primary-green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .btn-nav.btn-active {
+      background-color: white;
+      color: var(--primary-green);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .btn-nav.btn-logout {
+      border-color: rgba(244, 67, 54, 0.8);
+      background-color: rgba(244, 67, 54, 0.1);
+      cursor: pointer;
+    }
+
+    .btn-nav.btn-logout:hover {
+      background-color: #f44336;
+      color: white;
+      border-color: #f44336;
+    }
+
+    /* Container Styles */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow);
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container h2 {
+      font-family: 'Crimson Pro', serif;
+      color: var(--primary-green);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    .container h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--light-green), transparent);
+      border-radius: 2px;
+    }
+
+    /* Form Styles */
+    form#mark-attendance-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: var(--bg-light);
+      border-radius: 16px;
+      box-shadow: 0 4px 15px var(--shadow);
+    }
+
+    form#mark-attendance-form .form-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 150px;
+      flex: 1 1 150px;
+    }
+
+    form#mark-attendance-form label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-green);
+      font-size: 0.95rem;
+    }
+
+    form#mark-attendance-form label i {
+      margin-right: 0.5rem;
+    }
+
+    form#mark-attendance-form input[type="text"],
+    form#mark-attendance-form select,
+    form#mark-attendance-form input[type="date"] {
+      padding: 0.8rem 1rem;
+      border: 2px solid var(--border-light);
+      border-radius: 10px;
+      font-size: 1rem;
+      color: var(--text-dark);
+      font-family: 'Work Sans', sans-serif;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    form#mark-attendance-form input[type="text"]:focus,
+    form#mark-attendance-form select:focus,
+    form#mark-attendance-form input[type="date"]:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+      transform: translateY(-2px);
+    }
+
+    #mark-attendance-btn {
+      background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.9rem 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      align-self: flex-end;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+      font-family: 'Work Sans', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    #mark-attendance-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+    }
+
+    #mark-attendance-btn i {
+      margin-right: 0.5rem;
+    }
+
+    /* Button Styles */
+    #view-records-btn, #generate-report-btn {
+      background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.9rem 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: block;
+      margin: 1rem auto;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+      font-family: 'Work Sans', sans-serif;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    #view-records-btn:hover, #generate-report-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+    }
+
+    /* Filter Container */
+    #filter-container {
+      background: var(--bg-light);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+      text-align: center;
+      box-shadow: 0 2px 10px var(--shadow);
+    }
+
+    #filter-container label {
+      font-weight: 600;
+      color: var(--primary-green);
+      margin-right: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    #filter-container select {
+      padding: 0.6rem 1rem;
+      border: 2px solid var(--border-light);
+      border-radius: 8px;
+      margin-right: 1rem;
+      font-family: 'Work Sans', sans-serif;
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+    }
+
+    #filter-container select:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+    }
+
+    /* Percentage Display */
+    #percentage-display {
+      text-align: center;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin: 1.5rem 0;
+      font-size: 1.1rem;
+      font-family: 'Crimson Pro', serif;
+      padding: 1rem;
+      background: var(--bg-light);
+      border-radius: 10px;
+      box-shadow: 0 2px 10px var(--shadow);
+    }
+
+    /* Table Styles */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin: 2rem 0;
+    }
+
+    .attendance-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
+
+    .attendance-table thead {
+      background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+      color: white;
+    }
+
+    .attendance-table thead th {
+      text-align: center;
+      padding: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      font-family: 'Work Sans', sans-serif;
+    }
+
+    .attendance-table tbody tr {
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .attendance-table tbody tr:hover {
+      background-color: var(--bg-light);
+      transform: translateX(3px);
+    }
+
+    .attendance-table tbody td {
+      text-align: center;
+      padding: 1rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    /* Action buttons */
+    .action-buttons {
+      display: inline-flex;
+      gap: 0.5rem;
+    }
+
+    .action-buttons button {
+      border: none;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Work Sans', sans-serif;
+    }
+
+    .action-buttons button i {
+      font-size: 0.9rem;
+    }
+
+    .action-buttons button.btn-remove {
+      background: linear-gradient(135deg, #f44336, #e57373);
+      box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+    }
+
+    .action-buttons button.btn-remove:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      nav {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .btn-nav {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.8rem;
+      }
+
+      .container {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      form#mark-attendance-form {
+        padding: 1.5rem;
+      }
+
+      #filter-container {
+        padding: 1rem;
+      }
+
+      #filter-container label,
+      #filter-container select {
+        display: block;
+        margin: 0.5rem auto;
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-user-check"></i> Teachers Portal - Attendance</h1>
+    <nav>
+      <a href="home.html" class="btn-nav"><i class="fas fa-home"></i> Home</a>
+      <a href="events.html" class="btn-nav"><i class="fas fa-calendar-alt"></i> Events</a>
+      <a href="schedule.html" class="btn-nav"><i class="fas fa-clock"></i> Schedule</a>
+      <a href="grading.html" class="btn-nav"><i class="fas fa-graduation-cap"></i> Grading</a>
+      <a href="attendance.html" class="btn-nav btn-active"><i class="fas fa-user-check"></i> Attendance</a>
+      <a href="announcements.html" class="btn-nav"><i class="fas fa-bullhorn"></i> Announcements</a>
+      <a href="reports.html" class="btn-nav"><i class="fas fa-chart-bar"></i> Reports</a>
+       <a href="lessonplan.html" class="btn-nav"><i class="fas fa-book-open"></i> Lesson Plan</a>
+      <button onclick="logout()" class="btn-nav btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </nav>
+    <img src="2c41ee4a-1282-462a-ba5d-019375e704b4.jpg" alt="College Logo" class="logo" />
+  </header>
+
+  <section class="container">
+    <h2><i class="fas fa-clipboard-check"></i> Mark Attendance</h2>
+
+    <form id="mark-attendance-form">
+      <div class="form-group">
+        <label for="level"><i class="fas fa-layer-group"></i> Level</label>
+        <select id="level" required>
+          <option value="" disabled selected>Select level</option>
+          <option value="college">College</option>
+          <option value="elementary">Elementary</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="student-name"><i class="fas fa-user"></i> Student Name</label>
+        <input type="text" id="student-name" placeholder="Enter student name" required />
+      </div>
+      <div class="form-group">
+        <label for="course-section" id="course-section-label"><i class="fas fa-book"></i> Course/Section</label>
+        <input type="text" id="course-section" placeholder="Enter course or section" required />
+        <select id="course-select" style="display: none;">
+          <option value="" disabled selected>Select course</option>
+          <option value="BSCS">BSCS</option>
+          <option value="EDUC">EDUC</option>
+          <option value="BSBA">BSBA</option>
+          <option value="Midwifery">Midwifery</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="attendance-date"><i class="fas fa-calendar"></i> Date</label>
+        <input type="date" id="attendance-date" required />
+      </div>
+      <div class="form-group">
+        <label for="status"><i class="fas fa-check-circle"></i> Status</label>
+        <select id="status" required>
+          <option value="" disabled selected>Select status</option>
+          <option value="present">Present</option>
+          <option value="absent">Absent</option>
+          <option value="late">Late</option>
+        </select>
+      </div>
+      <button type="submit" id="mark-attendance-btn">
+        <i class="fas fa-check-double"></i> Mark Attendance
+      </button>
+    </form>
+
+    <button id="view-records-btn"><i class="fas fa-eye"></i> View Records</button>
+
+    <div id="filter-container" style="display: none;">
+      <label for="filter-course"><i class="fas fa-filter"></i> Filter by Course:</label>
+      <select id="filter-course">
+        <option value="all">All Courses</option>
+      </select>
+      <label for="filter-date"><i class="fas fa-calendar-day"></i> Filter by Date:</label>
+      <select id="filter-date">
+        <option value="all">All Dates</option>
+      </select>
+    </div>
+
+    <div id="percentage-display"></div>
+
+    <div class="table-wrapper" style="display: none;" id="table-wrapper">
+      <table id="attendance-list" class="attendance-table">
+        <thead>
+          <tr>
+            <th><i class="fas fa-layer-group"></i> Level</th>
+            <th><i class="fas fa-user"></i> Student</th>
+            <th><i class="fas fa-book"></i> Course/Section</th>
+            <th><i class="fas fa-calendar"></i> Date</th>
+            <th><i class="fas fa-check-circle"></i> Status</th>
+            <th><i class="fas fa-cog"></i> Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <button id="generate-report-btn" style="display: none;"><i class="fas fa-file-download"></i> Generate Report</button>
+  </section>
+
+  <script>
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+          localStorage.removeItem('attendanceData_' + currentUser);
+        }
+        localStorage.removeItem('currentUser');
+        location.href = 'index.html';
+      }
+    }
+
+    // Check if user is logged in
+    if (!localStorage.getItem('currentUser')) {
+      window.location.href = 'index.html';
+    }
+
+    let attendanceData = {};
+    let currentDateFilter = 'all';
+    let currentCourseFilter = 'all';
+
+    function loadData() {
+      const currentUser = localStorage.getItem('currentUser');
+      if (!currentUser) return;
+      const data = localStorage.getItem('attendanceData_' + currentUser);
+      if (data) {
+        attendanceData = JSON.parse(data);
+      } else {
+        attendanceData = {};
+      }
+    }
+
+    function saveData() {
+      const currentUser = localStorage.getItem('currentUser');
+      if (!currentUser) return;
+      localStorage.setItem('attendanceData_' + currentUser, JSON.stringify(attendanceData));
+    }
+
+    function renderTable() {
+      const tbody = document.querySelector('#attendance-list tbody');
+      tbody.innerHTML = '';
+      const tableWrapper = document.getElementById('table-wrapper');
+      const generateBtn = document.getElementById('generate-report-btn');
+      const filterContainer = document.getElementById('filter-container');
+      const filterDateSelect = document.getElementById('filter-date');
+      const filterCourseSelect = document.getElementById('filter-course');
+
+      // Populate date filter select
+      const dates = new Set();
+      for (const key in attendanceData) {
+        const records = attendanceData[key];
+        records.forEach(record => dates.add(record.date));
+      }
+      filterDateSelect.innerHTML = '<option value="all">All Dates</option>';
+      Array.from(dates).sort().forEach(date => {
+        const option = document.createElement('option');
+        option.value = date;
+        option.textContent = date;
+        filterDateSelect.appendChild(option);
+      });
+      filterDateSelect.value = currentDateFilter;
+
+      // Populate course filter select
+      const courses = new Set();
+      for (const key in attendanceData) {
+        const records = attendanceData[key];
+        records.forEach(record => courses.add(record.courseSection));
+      }
+      filterCourseSelect.innerHTML = '<option value="all">All Courses</option>';
+      Array.from(courses).sort().forEach(course => {
+        const option = document.createElement('option');
+        option.value = course;
+        option.textContent = course;
+        filterCourseSelect.appendChild(option);
+      });
+      filterCourseSelect.value = currentCourseFilter;
+
+      let hasData = false;
+      for (const key in attendanceData) {
+        const records = attendanceData[key];
+        if (records.length > 0) {
+          records.forEach((record, index) => {
+            const matchesDate = currentDateFilter === 'all' || record.date === currentDateFilter;
+            const matchesCourse = currentCourseFilter === 'all' || record.courseSection === currentCourseFilter;
+            if (matchesDate && matchesCourse) {
+              hasData = true;
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${record.level.charAt(0).toUpperCase() + record.level.slice(1)}</td>
+                <td>${record.name}</td>
+                <td>${record.courseSection}</td>
+                <td>${record.date}</td>
+                <td>${record.status.toUpperCase()}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-remove" data-group="${key}" data-index="${index}">
+                      <i class="fa-solid fa-trash"></i> Remove
+                    </button>
+                  </div>
+                </td>
+              `;
+              tbody.appendChild(tr);
+            }
+          });
+        }
+      }
+
+      if (hasData) {
+        tableWrapper.style.display = 'block';
+        generateBtn.style.display = 'block';
+        filterContainer.style.display = 'block';
+        calculatePercentages();
+      } else {
+        tableWrapper.style.display = 'none';
+        generateBtn.style.display = 'none';
+        filterContainer.style.display = 'none';
+        document.getElementById('percentage-display').innerHTML = '';
+      }
+    }
+
+    function removeRecord(group, index) {
+      if (confirm('Remove this attendance record?')) {
+        attendanceData[group].splice(index, 1);
+        if (attendanceData[group].length === 0) {
+          delete attendanceData[group];
+        }
+        saveData();
+        renderTable();
+      }
+    }
+
+    // Event delegation for remove buttons
+    document.getElementById('attendance-list').addEventListener('click', function(e) {
+      if (e.target.closest('.btn-remove')) {
+        const button = e.target.closest('.btn-remove');
+        const group = button.dataset.group;
+        const index = parseInt(button.dataset.index, 10);
+        removeRecord(group, index);
+      }
+    });
+
+    function calculatePercentages() {
+      // Simple percentage calculation example
+      const display = document.getElementById('percentage-display');
+      let totalRecords = 0;
+      let presentCount = 0;
+
+      for (const key in attendanceData) {
+        const records = attendanceData[key];
+        records.forEach(record => {
+          const matchesDate = currentDateFilter === 'all' || record.date === currentDateFilter;
+          const matchesCourse = currentCourseFilter === 'all' || record.courseSection === currentCourseFilter;
+          if (matchesDate && matchesCourse) {
+            totalRecords++;
+            if (record.status === 'present') {
+              presentCount++;
+            }
+          }
+        });
+      }
+
+      if (totalRecords > 0) {
+        const percentage = ((presentCount / totalRecords) * 100).toFixed(1);
+        display.innerHTML = `<p><i class="fas fa-chart-pie"></i> Average Attendance Percentage: ${percentage}% (${presentCount} present out of ${totalRecords} records)</p>`;
+      } else {
+        display.innerHTML = '';
+      }
+    }
+
+    function generateReport() {
+      // Simulate report generation (in real app, use library like jsPDF or XLSX)
+      alert('Report generated and ready for download (simulated).');
+    }
+
+    document.getElementById('level').addEventListener('change', function() {
+      const level = this.value;
+      const label = document.getElementById('course-section-label');
+      const input = document.getElementById('course-section');
+      const select = document.getElementById('course-select');
+      if (level === 'college') {
+        label.innerHTML = '<i class="fas fa-book"></i> Course';
+        input.style.display = 'none';
+        select.style.display = 'block';
+        select.required = true;
+        input.required = false;
+      } else if (level === 'elementary') {
+        label.innerHTML = '<i class="fas fa-users"></i> Section';
+        input.style.display = 'block';
+        select.style.display = 'none';
+        input.placeholder = 'Enter section';
+        input.required = true;
+        select.required = false;
+      } else {
+        label.innerHTML = '<i class="fas fa-book"></i> Course/Section';
+        input.style.display = 'block';
+        select.style.display = 'none';
+        input.placeholder = 'Enter course or section';
+        input.required = true;
+        select.required = false;
+      }
+    });
+
+    document.getElementById('mark-attendance-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const level = document.getElementById('level').value;
+      const name = document.getElementById('student-name').value.trim();
+      let courseSection;
+      if (level === 'college') {
+        courseSection = document.getElementById('course-select').value.trim();
+      } else {
+        courseSection = document.getElementById('course-section').value.trim();
+      }
+      const date = document.getElementById('attendance-date').value;
+      const status = document.getElementById('status').value;
+
+      if (!level || !name || !courseSection || !date || !status) {
+        alert('Please fill all fields.');
+        return;
+      }
+
+      const group = `${level}_${courseSection}_${name}`;
+      if (!attendanceData[group]) {
+        attendanceData[group] = [];
+      }
+
+      // Check for duplicate
+      const existing = attendanceData[group].find(record => record.date === date);
+      if (existing) {
+        alert('Attendance already marked for this student on this date.');
+        return;
+      }
+
+      attendanceData[group].push({ level, name, courseSection, date, status });
+
+      saveData();
+      this.reset();
+      alert('Attendance marked successfully!');
+      renderTable();
+    });
+
+    document.getElementById('view-records-btn').addEventListener('click', () => {
+      currentDateFilter = 'all';
+      currentCourseFilter = 'all';
+      renderTable();
+    });
+    document.getElementById('generate-report-btn').addEventListener('click', generateReport);
+    document.getElementById('filter-date').addEventListener('change', function() {
+      currentDateFilter = this.value;
+      renderTable();
+    });
+    document.getElementById('filter-course').addEventListener('change', function() {
+      currentCourseFilter = this.value;
+      renderTable();
+    });
+
+    loadData();
+    document.getElementById('attendance-date').valueAsDate = new Date();
+  </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teachers Portal - Register</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f9f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .register-container {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    width: 350px;
+  }
+  h2 {
+    color: #2e7d32;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    color: #2e7d32;
+    font-weight: bold;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border: 1px solid #2e7d32;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    padding: 0.7rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #1b5e20;
+  }
+  .login-link {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  .login-link a {
+    color: #2e7d32;
+    text-decoration: none;
+  }
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+  .error-message {
+    color: red;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+<div class="register-container">
+  <h2>Register</h2>
+  <form id="register-form">
+    <label for="username">Username:</label>
+    <input type="text" id="username" required />
+    <label for="password">Password:</label>
+    <input type="password" id="password" required />
+    <button type="submit">Register</button>
+    <div class="error-message" id="error-msg"></div>
+  </form>
+  <div class="login-link">
+    Already have an account? <a href="index.html">Login here</a>
+  </div>
+</div>
+
+<script>
+  const registerForm = document.getElementById('register-form');
+  const errorMsg = document.getElementById('error-msg');
+
+  registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!username || !password) {
+      errorMsg.textContent = 'Please enter both username and password.';
+      return;
+    }
+
+    // Check if user already exists
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const userExists = users.some(user => user.username === username);
+    if (userExists) {
+      errorMsg.textContent = 'Username already exists. Please choose another.';
+      return;
+    }
+
+    // Save new user
+    users.push({ username, password });
+    localStorage.setItem('users', JSON.stringify(users));
+    alert('Registration successful! You can now log in.');
+    window.location.href = 'index.html';
+  });
+</script>
+</body>
+</html>
